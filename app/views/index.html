@@ -1,65 +1,182 @@
-<!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <base href="/">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(app) styles/vendor.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css({.tmp,app}) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <!-- endbuild -->
-  </head>
-  <body ng-app="archvisApp">
-    <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
 
-    <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+  .link {
+    fill: none;
+    stroke: #666;
+    stroke-width: 1.5px;
+  }
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  #licensing {
+    fill: green;
+  }
 
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script>
+  .link.licensing {
+    stroke: green;
+  }
 
-    <!--[if lt IE 9]>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/json3/lib/json3.min.js"></script>
-    <![endif]-->
+  .link.resolved {
+    stroke-dasharray: 0,2 1;
+  }
 
-    <!-- build:js(app) scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
+  circle {
+    fill: #ccc;
+    stroke: #333;
+    stroke-width: 1.5px;
+  }
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/navbar.js"></script>
-        <!-- endbuild -->
-</body>
-</html>
+  text {
+    font: 10px sans-serif;
+    pointer-events: none;
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+  }
+
+</style>
+<body>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script>
+
+    var width = 1460,
+    height = 800;
+
+    var color = d3.scale.category20();
+
+    var force = d3.layout.force()
+    .charge(-390)
+    .linkDistance(70)
+    .friction(0.9)
+    .size([width, height]);
+
+
+ 
+
+
+
+
+
+
+
+
+    var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+
+
+
+
+
+    d3.json("extract/", function(error, graph) {
+      force
+      .nodes(graph.nodes)
+      .links(graph.links)
+      .start();
+
+      var link = svg.selectAll(".link")
+      .data(graph.links)
+      .enter().append("line")
+      .attr("class", "link")
+      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+
+ var node_drag = d3.behavior.drag()
+        .on("dragstart", dragstart)
+        .on("drag", dragmove)
+        .on("dragend", dragend);
+
+
+    function tick() {
+      link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+/*
+        node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });*/
+
+        text.attr("dx", function(d) { return d.x+8; })
+        .attr("dy", function(d) { return d.y+8; });
+
+      node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    };
+
+
+    function dragstart(d, i) {
+        force.stop() // stops the force auto positioning before you start dragging
+    }
+
+    function dragmove(d, i) {
+        d.px += d3.event.dx;
+        d.py += d3.event.dy;
+        d.x += d3.event.dx;
+        d.y += d3.event.dy; 
+        tick(); // this is the key to make it work together with updating both px,py,x,y on d !
+    }
+
+    function dragend(d, i) {
+        d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
+        tick();
+        force.resume();
+    }
+
+
+
+
+
+
+      var gnode = svg.selectAll('g.gnode')
+      .data(graph.nodes)
+      .enter()
+      .append('g');
+     // .classed('gnode', true);
+      
+
+
+      
+      var node = gnode.append("circle")
+      .attr("class", "node")
+      .attr("r", function(d){
+        if(d.group == 1){
+          return 15;
+        }
+        else{
+          return 9;
+        }
+      })
+      .style("fill", function(d) { return color(d.group); })
+      //.call(force.drag),
+      .call(node_drag);
+      
+      var text = gnode.append("text")
+      .text(function(d) {
+       return d.name;
+     });
+   
+       force.on("tick", tick);
+
+
+});
+
+//force.on("tick", tick);
+
+
+   /*   force.on("tick", function() {
+        link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+        node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+
+        text.attr("dx", function(d) { return d.x+10; })
+        .attr("dy", function(d) { return d.y+10; });
+      });
+    });*/
+
+
+
+
+
+</script>

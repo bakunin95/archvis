@@ -22,7 +22,8 @@
     "method-override": "~1.0.0",
     "morgan": "~1.0.0",
     "node-dir": "^0.1.5",
-    "static-favicon": "~1.0.1"
+    "static-favicon": "~1.0.1",
+    "wrench": "^1.5.8"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
