@@ -1,182 +1,220 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <style>
 
-  .link {
-    fill: none;
-    stroke: #666;
-    stroke-width: 1.5px;
-  }
+    .link {
+      fill: none;
+      stroke: #666;
+      stroke-width: 1.5px;
+    }
 
-  #licensing {
-    fill: green;
-  }
+    #licensing {
+      fill: green;
+    }
 
-  .link.licensing {
-    stroke: green;
-  }
+    .link.licensing {
+      stroke: green;
+    }
 
-  .link.resolved {
-    stroke-dasharray: 0,2 1;
-  }
+    .link.resolved {
+      stroke-dasharray: 0,2 1;
+    }
 
-  circle {
-    fill: #ccc;
-    stroke: #333;
-    stroke-width: 1.5px;
-  }
-
-  text {
-    font: 10px sans-serif;
-    pointer-events: none;
-    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
-  }
-
-</style>
-<body>
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script>
-
-    var width = 1460,
-    height = 800;
-
-    var color = d3.scale.category20();
-
-    var force = d3.layout.force()
-    .charge(-390)
-    .linkDistance(70)
-    .friction(0.9)
-    .size([width, height]);
+    circle {
+      fill: #ccc;
+      stroke: #333;
+      stroke-width: 1.5px;
+    }
 
 
+    circle.outer {
+    display         : none;
+    stroke-dasharray: 4px;
+    stroke-opacity  : 0.5;
+    fill            : transparent;
+    }
+
+    .selected circle.outer {
+      display : inline;
+    }
+
+
+
+
+
+    text {
+      font: 10px sans-serif;
+      pointer-events: none;
+      text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    }
+
+
+
+    #mainPanel {
+      height:800px;
+      background-color:#dedede;
+    }
+
+
+    #leftPanel {
+
+      background-color:#bfbfbf;
+    }
+
+
+    #rightPanel {
+
+      background-color:#e7e7e7;
+    }
+
+
+    #centerPanel {
+
+
+    }
+
+    .navbar-brand {
+      color: #FFF !important;
+    }
+
+
+    .CodeMirror {
+      border: 1px solid #eee;
+      height: 100%;
+    }
+    .CodeMirror-scroll {
+      overflow-y: hidden;
+      overflow-x: auto;
+    }
+
+
+
+
+    
+  </style>
+  <link href="jquery-ui/themes/base/jquery-ui.css" rel="stylesheet"/>
+
+  <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+
+  <script src="../bower_components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+  <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <script src="../bower_components/d3/d3.min.js"></script>
+  <script src="../bower_components/jquery.layout/dist/jquery.layout-latest.min.js"></script>
+  <script src="../bower_components/underscore/underscore.js"></script>
+
+<script src="../scripts/controllers/graph.js"></script>
+
+
+
+<script src="../bower_components/codemirror/lib/codemirror.js"></script>
+<link rel="stylesheet" href="../bower_components/codemirror/lib/codemirror.css">
+<script src="../bower_components/codemirror/mode/javascript/javascript.js"></script>
+<script src="../bower_components/codemirror/mode/css/css.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
  
 
-
-
-
-
-
-
-
-    var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-
-
-
-
-
-    d3.json("extract/", function(error, graph) {
-      force
-      .nodes(graph.nodes)
-      .links(graph.links)
-      .start();
-
-      var link = svg.selectAll(".link")
-      .data(graph.links)
-      .enter().append("line")
-      .attr("class", "link")
-      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
-
-
- var node_drag = d3.behavior.drag()
-        .on("dragstart", dragstart)
-        .on("drag", dragmove)
-        .on("dragend", dragend);
-
-
-    function tick() {
-      link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-/*
-        node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });*/
-
-        text.attr("dx", function(d) { return d.x+8; })
-        .attr("dy", function(d) { return d.y+8; });
-
-      node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-    };
-
-
-    function dragstart(d, i) {
-        force.stop() // stops the force auto positioning before you start dragging
-    }
-
-    function dragmove(d, i) {
-        d.px += d3.event.dx;
-        d.py += d3.event.dy;
-        d.x += d3.event.dx;
-        d.y += d3.event.dy; 
-        tick(); // this is the key to make it work together with updating both px,py,x,y on d !
-    }
-
-    function dragend(d, i) {
-        d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
-        tick();
-        force.resume();
-    }
-
-
-
-
-
-
-      var gnode = svg.selectAll('g.gnode')
-      .data(graph.nodes)
-      .enter()
-      .append('g');
-     // .classed('gnode', true);
-      
-
-
-      
-      var node = gnode.append("circle")
-      .attr("class", "node")
-      .attr("r", function(d){
-        if(d.group == 1){
-          return 15;
-        }
-        else{
-          return 9;
-        }
-      })
-      .style("fill", function(d) { return color(d.group); })
-      //.call(force.drag),
-      .call(node_drag);
-      
-      var text = gnode.append("text")
-      .text(function(d) {
-       return d.name;
-     });
-   
-       force.on("tick", tick);
-
-
-});
-
-//force.on("tick", tick);
-
-
-   /*   force.on("tick", function() {
-        link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-
-        node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
-
-        text.attr("dx", function(d) { return d.x+10; })
-        .attr("dy", function(d) { return d.y+10; });
-      });
-    });*/
-
-
-
-
-
 </script>
+
+
+
+  <link href="../bower_components/jquery.layout/dist/jquery.layout-latest.css" rel="stylesheet"/>
+
+  <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet"/>
+
+</head>
+<body>
+
+
+
+
+
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Archvis - visualisation et analyse de la structure de site web</a>
+    </div>
+
+
+
+ <ul class="nav navbar-nav navbar-right">
+       
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Télécharger <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="extract/" download="graph.json" >graph en format JSON</a></li>
+          </ul>
+        </li>
+         <li><a href="#">À propos</a></li>
+      </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>
+<div id="mainLayout">
+<div class="ui-layout-center" id="centerPanel">Center</div>
+<div class="ui-layout-east"  id="rightPanel">
+  <br><br>
+  Code source:
+<textarea id='codeEditor'></textarea>
+</div>
+
+
+  <div class="ui-layout-west" id="leftPanel">Right
+    <br><br>
+
+
+    <div class="row-fluid">
+      <div class="span">
+
+        <form class="navbar-form" role="search">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="span8">.gffg</div>
+    </div>
+
+
+
+
+  </div>
+</div>
+</body>
+</html>
