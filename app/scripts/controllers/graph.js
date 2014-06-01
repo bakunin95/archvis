@@ -81,7 +81,7 @@ jQuery(function($) {
 			.friction(0.9)
 			.size([graphClass.width, graphClass.height]);
 
-			var svg = d3.select("#centerPanel").append("svg")
+			var svg = d3.select("#d3Placeholder").append("svg")
 			.attr("width", graphClass.width)
 			.attr("height", graphClass.height);
 

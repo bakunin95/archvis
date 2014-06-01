@@ -103,6 +103,9 @@ fill: #000;
   </style>
   <link href="jquery-ui/themes/base/jquery-ui.css" rel="stylesheet"/>
 
+
+
+
   <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
 
   <script src="../bower_components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
@@ -123,9 +126,14 @@ fill: #000;
 
 
 
+<script src="../bower_components/footable/js/footable.js"></script>
+<script src="../bower_components/footable/js/footable.paginate.js"></script>
+<script src="../bower_components/footable/js/footable.sort.js"></script>
+<script src="../bower_components/footable/js/footable.filter.js"></script>
 
+<script src="../scripts/controllers/tableau.js"></script>
 
-
+<link rel="stylesheet" href="../bower_components/footable/css/footable.core.min.css">
 
 
 
@@ -227,7 +235,40 @@ fill: #000;
   </div>
 </div>
 <div id="mainLayout">
-<div class="ui-layout-center" id="centerPanel"></div>
+<div class="ui-layout-center" id="centerPanel">
+  
+<div id="d3Placeholder"></div>
+
+
+
+
+
+<table class="footable table" >
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Last name</th>
+  <th>Age</th>
+</tr>
+</thead>
+<tr>
+  <td>Jill</td>
+  <td>Smith</td>
+  <td>50</td>
+</tr>
+<tr>
+  <td>Eve</td>
+  <td>Jackson</td>
+  <td>94</td>
+</tr>
+</table> 
+
+
+
+
+
+
+</div>
 <div class="ui-layout-east"  id="rightPanel">
   <br><br>
   Code source:
