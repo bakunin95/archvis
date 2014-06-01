@@ -22,6 +22,13 @@
       stroke-dasharray: 0,2 1;
     }
 
+    
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
     circle {
       fill: #ccc;
       stroke: #333;
@@ -41,6 +48,9 @@
     }
 
 
+marker {
+fill: #000;
+}
 
 
 
@@ -88,9 +98,6 @@
       overflow-y: hidden;
       overflow-x: auto;
     }
-
-
-
 
     
   </style>
@@ -147,15 +154,40 @@
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Archvis - visualisation et analyse de la structure de site web</a>
+   
+      <img src ="../images/archvis.png"/>
+
+             
+
     </div>
 
+
+
+<ul class="nav navbar-nav navbar-left">
+       
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Vues <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="extract/" download="graph.json" >Générale</a></li>
+            <li><a href="extract/" download="graph.json" >Dépendances</a></li>
+            <li><a href="extract/" download="graph.json" >Densité de première ordre</a></li>
+            <li><a href="extract/" download="graph.json" >Coût du changements</a></li>
+            <li><a href="extract/" download="graph.json" >Maintenabilité</a></li>
+            <li><a href="extract/" download="graph.json" >Halstead</a></li>
+            <li><a href="extract/" download="graph.json" >Complexité cyclomatic</a></li>
+            <li><a href="extract/" download="graph.json" >Densité de complexité cyclomatic</a></li>
+            <li><a href="extract/" download="graph.json" >Ligne de code</a></li>
+            <li><a href="extract/" download="graph.json" >Nombre de paramètres</a></li>
+            <li><a href="extract/" download="graph.json" >Grosseur du noyaux</a></li>
+            <li><a href="extract/" download="graph.json" >Erreur javascript (JsHint)</a></li>
+          </ul>
+        </li>
+         <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Analyses <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="extract/" download="graph.json" >Complexité</a></li>
+            <li><a href="extract/" download="graph.json" >Jshint</a></li>
+          </ul></li>
+      </ul>
 
 
  <ul class="nav navbar-nav navbar-right">
@@ -163,7 +195,19 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Télécharger <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a href="extract/" download="graph.json" >graph en format JSON</a></li>
+            <li><a href="extractImage/" download="graph.json" >Une image de la vue en Jpeg</a></li>
+            <li><hr/></li>
+            <li><a href="extract/" download="graph.json" >Données de la vue en format JSON</a></li>
+            <li><a href="extract/xml" download="graph.xml" >Données de la vue en format XML</a></li>
+            <li><a href="extract/pdf" download="graph.pdf" >Données de la vue en format PDF</a></li>
+            <li><hr/></li>
+            <li><a href="extractAnalyseComplexite/" download="analyseComplexite.json" >Analyse de complexité en format JSON</a></li>
+            <li><a href="extractAnalyseComplexite/xml" download="analyseComplexite.xml" >Analyse de complexité en format XML</a></li>
+            <li><a href="extractAnalyseComplexite/pdf" download="analyseComplexite.pdf" >Analyse de complexité en format PDF</a></li>
+            <li><hr/></li>
+            <li><a href="extractAnalyseJshint/" download="analyseJshint.json" >Analyse JShint en format JSON</a></li>
+            <li><a href="extractAnalyseJshint/xml" download="analyseJshint.xml" >Analyse JShint en format XML</a></li>
+            <li><a href="extractAnalyseJshint/pdf" download="analyseJshint.pdf" >Analyse JShint en format PDF</a></li>
           </ul>
         </li>
          <li><a href="#">À propos</a></li>
@@ -183,7 +227,7 @@
   </div>
 </div>
 <div id="mainLayout">
-<div class="ui-layout-center" id="centerPanel">Center</div>
+<div class="ui-layout-center" id="centerPanel"></div>
 <div class="ui-layout-east"  id="rightPanel">
   <br><br>
   Code source:
@@ -208,7 +252,7 @@
         </form>
 
       </div>
-      <div class="span8">.gffg</div>
+      <div class="span8">Arbre</div>
     </div>
 
 
