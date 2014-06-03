@@ -77,7 +77,7 @@ jQuery(function($) {
 	    	// Initialize force
 			var force = d3.layout.force()
 			.charge(-390)
-			.linkDistance(70)
+			.linkDistance(170)
 			.friction(0.9)
 			.size([graphClass.width, graphClass.height]);
 
@@ -189,6 +189,36 @@ var path = svg.append("svg:g").selectAll("path")
 			    }
 
 
+
+							    // create the zoom listener
+				var zoomListener = d3.behavior.zoom()
+				  .scaleExtent([0.1, 3])
+				  .on("zoom", zoomHandler);
+
+				// function for handling zoom event
+				function zoomHandler() {
+				  gnode.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+				  path.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+
+				 
+				  	//svg.on("mousedown.zoom", null);
+					//svg.on("mousemove.zoom", null);
+					svg.on("dblclick.zoom", null);
+					//svg.on("touchstart.zoom", null);
+					//svg.on("wheel.zoom", null);
+					//svg.on("mousewheel.zoom", null);
+					//svg.on("MozMousePixelScroll.zoom", null);
+
+
+				}
+
+
+
+
+				zoomListener(svg);
+
+
+
 			    // Créer les noeuds, textes et liens
 			    var gnode = svg.selectAll('g.gnode')
 			    .data(graph.nodes)
@@ -218,6 +248,12 @@ var path = svg.append("svg:g").selectAll("path")
 
 			    node.on('mouseover', function(d) {
 			    	graphClass.onMouseOverNode(d,path);
+			    	svg.on("mousedown.zoom", null);
+					svg.on("mousemove.zoom", null);
+				});
+
+				 node.on('mouseout', function(d) {
+					zoomListener(svg);
 				});
 
 
