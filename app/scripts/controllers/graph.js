@@ -215,6 +215,30 @@ var path = svg.append("svg:g").selectAll("path")
 
 
 
+				//console.log(graphClass.colorsList(1));
+				function displayLegendBox(elem, objRange){
+				  d3.select(elem)
+				    .selectAll('div')
+				    .data(objRange)
+				      .enter()
+				      .append("div")
+				      .attr("class", function(d){
+				        return d.theClass;
+				      })
+				      .classed({"legends-box":true})
+				      .text(function(d){
+				        return d.max;
+				      });
+				}
+
+				var nodeRange = []
+
+				//displayLegendBox("#legend-vertex", nodeRange);
+
+				
+
+
+
 				zoomListener(svg);
 
 
