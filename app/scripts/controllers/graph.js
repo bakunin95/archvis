@@ -15,7 +15,7 @@ jQuery(function($) {
 
 
 
-	$('#mainLayout').height($(window).height()).layout({ applyDefaultStyles: true, east: { size: 500}  });
+	$('#mainLayout').height($(window).height()).layout({ applyDefaultStyles: true, east: { size: 10}  });
 
 
 
@@ -68,7 +68,7 @@ jQuery(function($) {
 				  return "red";
 				}
 				else{
-				  return "black";
+				  return "grey";
 				}
 			});
 	    },
