@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
   <meta charset="utf-8">
+  <base href="/">
   <style>
 
     .link {
@@ -106,7 +107,8 @@ fill: #000;
 
 
 
-  <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+  <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../bower_components/datatables/media/js/jquery.dataTables.js"></script>
 
   <script src="../bower_components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
   <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -115,9 +117,19 @@ fill: #000;
   <script src="../bower_components/jquery.layout/dist/jquery.layout-latest.min.js"></script>
   <script src="../bower_components/underscore/underscore.js"></script>
 
+
+  
+  <script src="../bower_components/angular/angular.js"></script>
+  <script src="../bower_components/angular-route/angular-route.js"></script>
+
+
+<script src="../scripts/app.js"></script>
+<script src="../scripts/controllers/tableau.js"></script>
+ 
+
+<script src="../scripts/controllers/main.js"></script>
+<script src="../scripts/controllers/tableau.js"></script>
 <script src="../scripts/controllers/graph.js"></script>
-
-
 
 <script src="../bower_components/codemirror/lib/codemirror.js"></script>
 <link rel="stylesheet" href="../bower_components/codemirror/lib/codemirror.css">
@@ -126,15 +138,9 @@ fill: #000;
 
 
 
-<script src="../bower_components/footable/js/footable.js"></script>
-<script src="../bower_components/footable/js/footable.paginate.js"></script>
-<script src="../bower_components/footable/js/footable.sort.js"></script>
-<script src="../bower_components/footable/js/footable.filter.js"></script>
 
-<script src="../scripts/controllers/tableau.js"></script>
 
-<link rel="stylesheet" href="../bower_components/footable/css/footable.core.min.css">
-
+<link rel="stylesheet" href="../bower_components/datatables/media/css/jquery.dataTables.css">
 
 
 
@@ -152,7 +158,7 @@ fill: #000;
   <link href="../bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet"/>
 
 </head>
-<body>
+<body  ng-app="archvisApp" >
 
 
 
@@ -176,24 +182,23 @@ fill: #000;
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Vues <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a href="extract/" download="graph.json" >Générale</a></li>
-            <li><a href="extract/" download="graph.json" >Dépendances</a></li>
-            <li><a href="extract/" download="graph.json" >Densité de première ordre</a></li>
-            <li><a href="extract/" download="graph.json" >Coût du changements</a></li>
-            <li><a href="extract/" download="graph.json" >Maintenabilité</a></li>
-            <li><a href="extract/" download="graph.json" >Halstead</a></li>
-            <li><a href="extract/" download="graph.json" >Complexité cyclomatic</a></li>
-            <li><a href="extract/" download="graph.json" >Densité de complexité cyclomatic</a></li>
-            <li><a href="extract/" download="graph.json" >Ligne de code</a></li>
-            <li><a href="extract/" download="graph.json" >Nombre de paramètres</a></li>
-            <li><a href="extract/" download="graph.json" >Grosseur du noyaux</a></li>
-            <li><a href="extract/" download="graph.json" >Erreur javascript (JsHint)</a></li>
+            <li><a href="graph/" >Générale</a></li>
+            <li><a href="graph/" >Dépendances</a></li>
+            <li><a href="graph/" >Densité de première ordre</a></li>
+            <li><a href="graph/" >Coût du changements</a></li>
+            <li><a href="graph/" >Maintenabilité</a></li>
+            <li><a href="graph/" >Halstead</a></li>
+            <li><a href="graph/" >Complexité cyclomatic</a></li>
+            <li><a href="graph/" >Densité de complexité cyclomatic</a></li>
+            <li><a href="graph/" >Ligne de code</a></li>
+            <li><a href="graph/" >Nombre de paramètres</a></li>
+            <li><a href="graph/" >Grosseur du noyaux</a></li>
+            <li><a href="graph/" >Erreur javascript (JsHint)</a></li>
           </ul>
         </li>
          <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Analyses <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a href="extract/" download="graph.json" >Complexité</a></li>
-            <li><a href="extract/" download="graph.json" >Jshint</a></li>
+            <li><a href="tableau/"  >Complexité</a></li>
           </ul></li>
       </ul>
 
@@ -201,21 +206,11 @@ fill: #000;
  <ul class="nav navbar-nav navbar-right">
        
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Télécharger <b class="caret"></b></a>
+          <a href="graph/#" class="dropdown-toggle" data-toggle="dropdown">Télécharger <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="extractImage/" download="graph.json" >Une image de la vue en Jpeg</a></li>
             <li><hr/></li>
-            <li><a href="extract/" download="graph.json" >Données de la vue en format JSON</a></li>
-            <li><a href="extract/xml" download="graph.xml" >Données de la vue en format XML</a></li>
-            <li><a href="extract/pdf" download="graph.pdf" >Données de la vue en format PDF</a></li>
-            <li><hr/></li>
-            <li><a href="extractAnalyseComplexite/" download="analyseComplexite.json" >Analyse de complexité en format JSON</a></li>
-            <li><a href="extractAnalyseComplexite/xml" download="analyseComplexite.xml" >Analyse de complexité en format XML</a></li>
-            <li><a href="extractAnalyseComplexite/pdf" download="analyseComplexite.pdf" >Analyse de complexité en format PDF</a></li>
-            <li><hr/></li>
-            <li><a href="extractAnalyseJshint/" download="analyseJshint.json" >Analyse JShint en format JSON</a></li>
-            <li><a href="extractAnalyseJshint/xml" download="analyseJshint.xml" >Analyse JShint en format XML</a></li>
-            <li><a href="extractAnalyseJshint/pdf" download="analyseJshint.pdf" >Analyse JShint en format PDF</a></li>
+            <li><a href="extract/" download="graph.json" >Analyse en format JSON</a></li>
           </ul>
         </li>
          <li><a href="#">À propos</a></li>
@@ -237,32 +232,8 @@ fill: #000;
 <div id="mainLayout">
 <div class="ui-layout-center" id="centerPanel">
   
-<div id="d3Placeholder"></div>
-
-
-
-
-
-<table class="footable table" >
-<thead>
-<tr>
-  <th>Name</th>
-  <th>Last name</th>
-  <th>Age</th>
-</tr>
-</thead>
-<tr>
-  <td>Jill</td>
-  <td>Smith</td>
-  <td>50</td>
-</tr>
-<tr>
-  <td>Eve</td>
-  <td>Jackson</td>
-  <td>94</td>
-</tr>
-</table> 
-
+        <br><br><br>
+<div id="d3Placeholder" ng-view></div>
 
 
 
@@ -301,5 +272,7 @@ fill: #000;
 
   </div>
 </div>
+
+
 </body>
 </html>

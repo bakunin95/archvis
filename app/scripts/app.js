@@ -1,20 +1,31 @@
 'use strict';
 
-angular.module('archvisApp', [
-  'ngCookies',
-  'ngResource',
-  'ngSanitize',
-  'ngRoute'
-])
-  .config(function ($routeProvider, $locationProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'partials/main',
-        controller: 'MainCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
+var archvisApp = angular.module('archvisApp', ['ngRoute','archvisControllers']);
+
+
+
+
+
+
+archvisApp.config(['$routeProvider','$locationProvider',
+  function($routeProvider, $locationProvider) {
+    $routeProvider.
+      when('/graph', {
+        templateUrl: 'views/partials/graph.html',
+        controller: 'graphCtrl'
+      }).
+      when('/tableau', {
+        templateUrl: 'views/partials/tableau.html',
+        controller: 'tableauCtrl'
+      }).
+      when('/',{
+        redirectTo: '/graph'
       });
-      
+     /* otherwise({
+        redirectTo: '/graph'
+      });*/
     $locationProvider.html5Mode(true);
-  });
+  }]);
+
+var archvisControllers = angular.module('archvisControllers', []);
+

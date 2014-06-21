@@ -1,8 +1,23 @@
-'use strict';
+jQuery(function($) {
 
-angular.module('archvisApp')
-  .controller('MainCtrl', function ($scope, $http) {
-    $http.get('/api/awesomeThings').success(function(awesomeThings) {
-      $scope.awesomeThings = awesomeThings;
-    });
-  });
+
+
+    var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
+              lineNumbers: true,
+              mode: "css"
+            });
+
+	var browserHeight = document.documentElement.clientHeight;
+	myCodeMirror.getWrapperElement().style.height = (0.8 * browserHeight)+ 'px';
+	myCodeMirror.refresh();
+
+
+
+	$('#mainLayout').height($(window).height()).layout({ applyDefaultStyles: true, east: { size: 10}  });
+
+
+
+
+
+
+});

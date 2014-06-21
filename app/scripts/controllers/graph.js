@@ -1,32 +1,13 @@
-jQuery(function($) {
+'use strict';
 
 
-
-
-
-    var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
-              lineNumbers: true,
-              mode: "css"
-            });
-
-	var browserHeight = document.documentElement.clientHeight;
-	myCodeMirror.getWrapperElement().style.height = (0.8 * browserHeight)+ 'px';
-	myCodeMirror.refresh();
-
-
-
-	$('#mainLayout').height($(window).height()).layout({ applyDefaultStyles: true, east: { size: 10}  });
-
-
-
-
-
-
-
+archvisControllers.controller('graphCtrl', ['$scope', '$http',
+  function ($scope, $http) {
+  
 	var graphClass = {
 	    width: $("#mainLayout").layout().panes.center.innerWidth()-10,
 	    height: 700,
-	    myCodeMirror: myCodeMirror,
+	    //myCodeMirror: myCodeMirror,
 	    colorsList: d3.scale.category20(),
 	    getGraphData: function(){
 	    	return JSON.stringify(graphClass.graphData);
@@ -39,7 +20,7 @@ jQuery(function($) {
 	     	console.log(selectedNode);
 	
 	     	var filePath = selectedNode[0][0]["__data__"].name.substring(2);
-
+/*
 
 	     	if(filePath.substring(filePath.length-4,filePath.length)==".css"){
 	     		graphClass.myCodeMirror.setOption("mode", "css");
@@ -59,7 +40,7 @@ jQuery(function($) {
 
 
 			});
-
+*/
 
 	    },
 	    onMouseOverNode:function(d,link){
@@ -298,4 +279,12 @@ var path = svg.append("svg:g").selectAll("path")
 
 	graphClass.generateGraph();
 
-});
+
+
+
+
+}]);
+
+
+
+
