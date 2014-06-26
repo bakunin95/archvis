@@ -18,13 +18,16 @@ archvisApp.config(['$routeProvider','$locationProvider',
         templateUrl: 'views/partials/tableau.html',
         controller: 'tableauCtrl'
       }).
+       when('/extract/', {
+      
+      }).
       when('/',{
         redirectTo: '/graph/'
       });
      /* otherwise({
         redirectTo: '/graph'
       });*/
-    //$locationProvider.html5Mode(true);
+   $locationProvider.html5Mode(true);
   }]);
 
 var archvisControllers = angular.module('archvisControllers', []);
