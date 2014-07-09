@@ -12,7 +12,7 @@ archvisApp.config(['$routeProvider','$locationProvider',
     $routeProvider.
       when('/graph/', {
         templateUrl: 'views/partials/graph.html',
-        controller: 'graphCtrl'
+       controller: 'graphCtrl'
       }).
       when('/tableau/', {
         templateUrl: 'views/partials/tableau.html',

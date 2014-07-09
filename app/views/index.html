@@ -5,29 +5,14 @@
   <base href="/">
   <style>
 
-    .link {
-      fill: none;
-      stroke: #666;
-      stroke-width: 1.5px;
-    }
+  
 
-    #licensing {
-      fill: green;
-    }
-
-    .link.licensing {
-      stroke: green;
-    }
-
-    .link.resolved {
-      stroke-dasharray: 0,2 1;
-    }
 
     
 path.link {
-  fill: none;
+  fill: #666;
   stroke: #666;
-  stroke-width: 1.5px;
+  stroke-width: 1px;
 }
 
     circle {
@@ -48,9 +33,20 @@ path.link {
       display : inline;
     }
 
-
+end {
+  fill: #000;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
 marker {
 fill: #000;
+stroke: #666;
+  stroke-width: 1.5px;
+}
+
+marker#end {
+  fill: #999;
+ 
 }
 
 
@@ -100,7 +96,12 @@ fill: #000;
       overflow-x: auto;
     }
 
-    
+    .btn.active, .btn:active {
+    background-color: #666 !important;
+}
+
+
+
   </style>
   <link href="jquery-ui/themes/base/jquery-ui.css" rel="stylesheet"/>
 <link href="../bower_components/fancytree/dist/skin-win8/ui.fancytree.min.css" rel="stylesheet" type="text/css">
@@ -185,23 +186,7 @@ fill: #000;
 
 <ul class="nav navbar-nav navbar-left">
        
-        <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown">Vues <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="graph/" >Générale</a></li>
-            <li><a href="graph/" >Dépendances</a></li>
-            <li><a href="graph/" >Densité de première ordre</a></li>
-            <li><a href="graph/" >Coût du changements</a></li>
-            <li><a href="graph/" >Maintenabilité</a></li>
-            <li><a href="graph/" >Halstead</a></li>
-            <li><a href="graph/" >Complexité cyclomatic</a></li>
-            <li><a href="graph/" >Densité de complexité cyclomatic</a></li>
-            <li><a href="graph/" >Ligne de code</a></li>
-            <li><a href="graph/" >Nombre de paramètres</a></li>
-            <li><a href="graph/" >Grosseur du noyaux</a></li>
-            <li><a href="graph/" >Erreur javascript (JsHint)</a></li>
-          </ul>
-        </li>
+      
          <li><a href="" class="dropdown-toggle" data-toggle="dropdown">Analyses <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="tableau/"  >Complexité</a></li>
@@ -239,8 +224,7 @@ fill: #000;
 <div class="ui-layout-center" id="centerPanel">
   
         <br><br>
-<div id="d3Placeholder" ng-view></div>
-
+<div ng-view></div>
 
 
 
