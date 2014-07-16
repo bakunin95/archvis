@@ -91,3 +91,10 @@ marker#end {
   padding:5px 0 10px;
   border: 1px solid;
 }
+
+.divbox{
+  text-align:center;
+  border:1px solid #ccc;
+  padding:4px;
+}
+
