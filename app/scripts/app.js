@@ -26,7 +26,7 @@ archvisApp.config(['$routeProvider','$locationProvider',
       });
      /* otherwise({
         redirectTo: '/graph'
-      });*/
+      });*//*
    $locationProvider.html5Mode(true);
   }]);
 

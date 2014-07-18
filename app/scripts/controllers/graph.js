@@ -1,30 +1,14 @@
 'use strict';
 
 
-archvisControllers.controller('graphCtrl', ['$scope', '$http',
-	function ($scope, $http) {
+jQuery(function($) {
+console.log("coudonc");
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+$('#content').delegate( ".filter", "click", function() {
+	console.log($(this).val());
+	graphClass.changeFilter($(this).val());
+});
 
 
 var graphClass = {
@@ -44,7 +28,6 @@ var graphClass = {
     		d3.select(currentNode[0]).style('stroke-dasharray',null).style('stroke','black').style('stroke-width','1');
     	});
     	selectedNode.style('stroke-dasharray',("10,3")).style('stroke','red').style('stroke-width','10');
-    	console.log(selectedNode);
 
     	var filePath = selectedNode[0][0]["__data__"].name.substring(2);
 				
@@ -91,18 +74,12 @@ var graphClass = {
 
 	},
 	addNode: function(node){
-		console.log("rendu",graphClass.newRelations.nodes.length);
-
-
 		var foundId =graphClass.newRelations.nodes.indexOf(node);
-
 		if(foundId !== -1){
 			return foundId;
 		}
-
 		var id =graphClass.newRelations.nodes.length;
 		graphClass.newRelations.nodes.push(node);
-
 		return id;
 	},
 	changeFilter: function(filter){
@@ -114,7 +91,6 @@ var graphClass = {
 	    });*/
 
 		graphClass.svg.selectAll('circle.node').transition().duration(1000).attr('r', function(d) {
-								console.log(d.complexityNormalyzed);
 
 			var multiplier = 60;
 
@@ -293,8 +269,7 @@ var graphClass = {
 	},
 	generateGraph: function (name){
 		// Create Graph
-		d3.json("extract/", function(error, data) {
-			console.log(data);
+		d3.json("data/graphe.json", function(error, data) {
 			graphClass.drawGraph(data);
 		});
 
@@ -562,7 +537,6 @@ var path = svg.append("svg:g").selectAll("path")
 
 			    function zoomHandler(){
 
-			    	console.log(d3.event.translate);
 
 
 			    	//console.log("translated",graphClass.translated);
@@ -635,7 +609,12 @@ $("#sliderFriction").slider({ max: 1.1 , min: 0, value: 0.9, step:0.05, change: 
 }});
 
 
+
+
+
 $("#btn-pause").click(function(event,ui){
+
+	console.log("paused");
 	graphClass.pause = true;
 	force.stop();
 
@@ -664,7 +643,6 @@ $("#btn-play").click(function(event,ui){
 			        select: function( event, ui){
 
 
-			        	console.log(ui.item.value);
 
 
 
@@ -737,39 +715,7 @@ graphClass.generateGraph();
 
 
 
-/*
-$("#save").on("click", function(){
-var html = graphClass.svg
-.attr("version", 1.1)
-.attr("xmlns", "http://www.w3.org/2000/svg")
-.node().parentNode.innerHTML;
- 
-console.log(html);
-var imgsrc = 'data:image/svg+xml;base64,'+ btoa(html);
-var img = '<img src="'+imgsrc+'">';
-d3.select("#svgdataurl").html(img);
- 
- 
-var canvas = document.querySelector("canvas");
-var context = canvas.getContext("2d");
- 
-var image = new Image;
-image.src = imgsrc;
-image.onload = function() {
-context.drawImage(image, 0, 0);
- 
-var canvasdata = canvas.toDataURL("image/png");
- 
-var pngimg = '<img src="'+canvasdata+'">';
-d3.select("#pngdataurl").html(pngimg);
- 
-var a = document.createElement("a");
-a.download = "sample.png";
-a.href = canvasdata;
-a.click();
-};
- 
-});*/
+
 
 
 
@@ -781,43 +727,41 @@ a.click();
 
 
 
-$('button[name="filter"]').click(function(){
-	graphClass.changeFilter($(this).val());
-});
+
 
 
 $('button[rel="popover"]').tooltip({
         placement : 'bottom'
     });
 
-
-
-	//Arbre
+//Arbre
 	var node = $("#tree").fancytree({
 	  source: {
-	    url: "tree/",
+	    url: "data/arbre.json",
 	    cache: false
 	  },
 	});
 
 	$("#btnDeselectAll").click(function(){
-			$("#tree").fancytree("getTree").visit(function(node){
-				node.setSelected(false);
-			});
-			return false;
+		$("#tree").fancytree("getTree").visit(function(node){
+			node.setSelected(false);
 		});
-		$("#btnSelectAll").click(function(){
-			$("#tree").fancytree("getTree").visit(function(node){
-				node.setSelected(true);
-			});
-			return false;
+		return false;
+	});
+	$("#btnSelectAll").click(function(){
+		$("#tree").fancytree("getTree").visit(function(node){
+			node.setSelected(true);
 		});
+		return false;
+	});
+/*
 	$("#tree").fancytree({
-		extensions: ["select"],
 		checkbox: true,
-		graphClass: graphClass,
+		//graphClass: graphClass,
 		selectMode: 2,
 		select: function(event, data) {
+			
+
 				// We should not toggle, if target was "checkbox", because this
 				// would result in double-toggle (i.e. no toggle)
 				if( $.ui.fancytree.getEventTargetType(event) === "title" ){
@@ -841,11 +785,14 @@ $('button[rel="popover"]').tooltip({
 
 		}
 
-	});
+	});*/
+
+	
+	
 
 
 
-}]);
+});
 
 
 

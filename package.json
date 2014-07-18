@@ -21,6 +21,7 @@
     "express-session": "~1.0.2",
     "falafel": "^0.3.1",
     "file": "^0.2.2",
+    "fs-extra": "^0.10.0",
     "graceful-fs": "^3.0.2",
     "html-validator": "0.0.7",
     "jsdom": "^0.11.0",
