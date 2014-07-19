@@ -12,7 +12,6 @@ jQuery(function($) {
 	myCodeMirror.refresh();*/
 
 
-	$('#content').load("views/partials/graph.html");
 
 
 	$('#mainLayout').height($(window).height()).layout({ applyDefaultStyles: true, east: { size: 10}  });

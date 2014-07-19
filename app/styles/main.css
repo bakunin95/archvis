@@ -81,20 +81,3 @@ body {
   
 td {font-size:10px !important}
 
-marker#end {
-  fill: #999;
- 
-}
-
-.legends-box{
-  width:50px;
-  padding:5px 0 10px;
-  border: 1px solid;
-}
-
-.divbox{
-  text-align:center;
-  border:1px solid #ccc;
-  padding:4px;
-}
-
