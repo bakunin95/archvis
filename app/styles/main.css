@@ -81,3 +81,6 @@ body {
   
 td {font-size:10px !important}
 
+.ui-layout-west {
+  background-color: #FAFAFA !important;
+}

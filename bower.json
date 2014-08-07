@@ -20,7 +20,8 @@
     "fancytree": "~2.2.0",
     "datatables": "~1.10.0",
     "async": "~0.9.0",
-    "d3.chart.legend": "~0.1.5"
+    "d3.chart.legend": "~0.1.5",
+    "datatables-fixedcolumns": "~3.0.2"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",

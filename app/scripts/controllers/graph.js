@@ -17,6 +17,7 @@ var graphClass = {
 	pause: false,
 	zoomFactor:1,
 	zoom: d3.behavior.zoom,
+	pathColor: "#808080",
 	translateFactor: [0,0],
    // colorsList: d3.scale.category20(),
    	colorsList: d3.scale.ordinal().range(["#FF0000","#0000FF","#B2B2FF","#D9D9FF","#6699FF",
@@ -36,45 +37,23 @@ var graphClass = {
 				
 
 	},
-	onMouseOverNode:function(d,link,node){
-/*
- 		link.style("opacity", function(l) {
+	onMouseOverNode:function(d,path,node){
+		path.style('stroke', function(l) {
+			if (d === l.source || d === l.target){
+				return "red";
+			}
+			else{
+				return graphClass.pathColor;
+			}
+		});
+		path.style("opacity", function(l) {
 		 	if (d === l.source || d === l.target){
-				return 1;
+			return 1;
 			}
 			else{
 				return 0;
 			}
 		});
-*/
-
-
-		link.style('stroke', function(l) {
-			if (d === l.source || d === l.target){
-				return "red";
-			}
-			else{
-				return "grey";
-			}
-		});
-
-		
-
-
-/*
-		var linkedByIndex = {};
-		link.forEach(function(d) {
-		  linkedByIndex[d.source.index + "," + d.target.index] = 1;
-		});
-
-		node.style("opacity", function(o) {
-		  return neighboring(d, o) ? 1 : 0.3;
-		});
-
-		function neighboring(a, b) {
-		  return linkedByIndex[a.index + "," + b.index];
-		}*/
-
 	},
 	addNode: function(node){
 		var foundId =graphClass.newRelations.nodes.indexOf(node);
@@ -86,12 +65,6 @@ var graphClass = {
 		return id;
 	},
 	changeFilter: function(filter){
-		
-		/*
-		graphClass.svg.selectAll('circle.node').transition().each(function(d){
-			
-				
-	    });*/
 
 		graphClass.svg.selectAll('circle.node').transition().duration(1000).attr('r', function(d) {
 
@@ -103,7 +76,12 @@ var graphClass = {
 			    	return 10+d.complexityNormalyzed.reportCount*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			  case "cyclomatic":
@@ -111,7 +89,12 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.aggregate.cyclomaticDensity*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			  case "vocabulaire":
@@ -119,7 +102,12 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.vocabulary*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			  case "volume":
@@ -127,7 +115,12 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.volume*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			  case "effort":
@@ -135,7 +128,12 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.effort*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			   case "difficulte":
@@ -143,7 +141,12 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.difficulty*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			   case "bogues":
@@ -151,7 +154,12 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.bugs*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			   case "temps":
@@ -159,7 +167,12 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.time*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			   case "operators":
@@ -167,7 +180,12 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.operators.distinct*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			   case "operands":
@@ -175,7 +193,12 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.operands.distinct*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			  case "longueur":
@@ -183,7 +206,12 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.halstead.lngth*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			  case "functions":
@@ -191,7 +219,12 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.functions*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			  
@@ -200,11 +233,21 @@ var graphClass = {
 		        	return 10+d.complexityNormalyzed.maintainability*multiplier;
 				}
 				else{
-					return 10;
+					if(d.group == 1){
+			    		return 15;
+			    	}
+			    	else{
+			    		return 10;
+			    	}
 				}
 			  break;
 			  default: 
-			  	return 10;
+			  	if(d.group == 1){
+		    		return 15;
+		    	}
+		    	else{
+		    		return 10;
+		    	}
 			}		
 			tick();
 
@@ -285,10 +328,10 @@ var graphClass = {
 	createLegend: function(svg){
 		if(_.isUndefined(graphClass.graphData.info) == false){
 			var colors = [  ["Html"+" ["+graphClass.graphData.info.groupCount[1]+"]", graphClass.colorsList(1)],
-							["Javascript externe"+" ["+graphClass.graphData.info.groupCount[2]+"]", graphClass.colorsList(2)],
-							["Javascript externe (hors serveur)"+" ["+graphClass.graphData.info.groupCount[11]+"]", graphClass.colorsList(11)],
-							["Javascript interne"+" ["+graphClass.graphData.info.groupCount[4]+"]", graphClass.colorsList(4)],
-							["Javascript externe (liens mort)"+" ["+graphClass.graphData.info.groupCount[10]+"]", graphClass.colorsList(10)],
+							["JavaScript externe"+" ["+graphClass.graphData.info.groupCount[2]+"]", graphClass.colorsList(2)],
+							["JavaScript externe (hors serveur)"+" ["+graphClass.graphData.info.groupCount[11]+"]", graphClass.colorsList(11)],
+							["JavaScript interne"+" ["+graphClass.graphData.info.groupCount[4]+"]", graphClass.colorsList(4)],
+							["JavaScript externe (liens mort)"+" ["+graphClass.graphData.info.groupCount[10]+"]", graphClass.colorsList(10)],
 							["Requête ajax"+" ["+graphClass.graphData.info.groupCount[9]+"]", graphClass.colorsList(9)],
 							["Css externe"+" ["+graphClass.graphData.info.groupCount[3]+"]", graphClass.colorsList(3)],
 							["Css externe (hors serveurs)"+" ["+graphClass.graphData.info.groupCount[13]+"]", graphClass.colorsList(13)],
@@ -402,7 +445,8 @@ var graphClass = {
 	        force.resume();
 
 	        if(graphClass.pause == true){
-				setTimeout(function(){force.stop()},1000);
+				//setTimeout(function(){force.stop()},1000);
+				force.stop();
 			}
 
 	    }
@@ -425,7 +469,7 @@ var graphClass = {
 	    		return 15;
 	    	}
 	    	else{
-	    		return 9;
+	    		return 10;
 	    	}
 	    })
 	    .style("fill", function(d) { return graphClass.colorsList(d.group); })
@@ -442,10 +486,17 @@ var graphClass = {
 	    	svg.on("mousemove.zoom", null);
 	    });
 
-	    node.on("mouseout", function(d) {
-		        path.style("opacity", function(l) {
-				 	return 1;
-				});
+	    gnode.on("mouseout", function(d) {
+    		path.style("stroke", function(l) {
+			 	return graphClass.pathColor;
+			});
+	        path.style("opacity", function(l) {
+			 	return 1;
+			});
+		});
+
+		path.style('stroke', function(l) {
+			return graphClass.pathColor;
 		});
 
 
@@ -529,6 +580,27 @@ var graphClass = {
 					setTimeout(function(){force.stop()},1000);
 				}
 			}});
+
+			$("#sliderLiens").slider({ max: 255 , min: 0, value: 128, step:1, change: function( event, ui ) {
+				var val = 255-ui.value;
+				graphClass.pathColor = rgbToHex(val, val, val);
+				path.style('stroke', function(l) {
+					return graphClass.pathColor;
+				});
+				
+				
+			}});
+
+
+			$("#sliderText").slider({ max: 120 , min: 8, value: 11, step:1, change: function( event, ui ) {
+				//d3.select("body").transition().style("font-size", ui.value + "px");
+				text.style("font-size", ui.value + "px");
+				//$('.text').css("font-size", ui.value + "px");
+
+			}});
+			
+
+			
 
 			$("#btn-pause").click(function(event,ui){
 
@@ -665,6 +737,15 @@ graphClass.generateGraph();
 
 
 });
+
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
 
 
 

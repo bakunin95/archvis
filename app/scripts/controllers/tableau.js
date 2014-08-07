@@ -1,7 +1,9 @@
 'use strict';
 
-$('#analyseTable').dataTable( {
+var table = $('#analyseTable').dataTable( {
     "ajax": 'data/tableau.json',
+    scrollX:        true,
+        scrollCollapse: true,
     "columns": [
     { "data": "name" },
     { "data": "folder" },
@@ -27,3 +29,7 @@ $('#analyseTable').dataTable( {
 	{ "data": "operandsDistinct" }
     ] 
 } );
+
+new $.fn.dataTable.FixedColumns( table, {
+        leftColumns: 3
+    } );

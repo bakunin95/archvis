@@ -26,7 +26,7 @@ marker#end {
  path.link {
       fill: #666;
       stroke: #666;
-      stroke-width: 1px;
+      stroke-width: 1.5px;
     }
     circle {
       fill: #ccc;
@@ -49,7 +49,7 @@ marker#end {
     }
     marker {
       fill: #000;
-      stroke: #666;
+      stroke: #000;
       stroke-width: 1.5px;
     }
     marker#end {
@@ -57,9 +57,11 @@ marker#end {
       
     }
     text {
-      font: 10px sans-serif;
+      font: 11px sans-serif;
       pointer-events: none;
-      text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+      text-shadow: 0 2px 0 #fff, 2px 0 0 #fff, 0 -2px 0 #fff, -2px 0 0 #fff;
+     
+
     }
     #mainPanel {
       height:800px;
@@ -97,6 +99,8 @@ marker#end {
   <link href="bower_components/fancytree/dist/skin-win8/ui.fancytree.min.css" rel="stylesheet" type="text/css">
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
+  <script src="bower_components/datatables-fixedcolumns/js/dataTables.fixedColumns.js"></script>
+
   <script src="bower_components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="bower_components/d3/d3.min.js"></script>
@@ -111,6 +115,8 @@ marker#end {
   <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
   <script src="bower_components/codemirror/mode/css/css.js"></script>
   <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css">
+  <link rel="stylesheet" href="bower_components/datatables-fixedcolumns/css/dataTables.fixedColumns.css">
+
   <link href="bower_components/jquery.layout/dist/layout-default-latest.css" rel="stylesheet"/>
   <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet"/>
@@ -125,9 +131,9 @@ marker#end {
       </div>
       <ul class="nav navbar-nav navbar-left">
        <li><a href="" class="dropdown-toggle" data-toggle="dropdown">Analyses <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-          <li><a href="#tableau"  >Complexité</a></li>
-          <li><a href="#graphe"  >Graphe</a></li>
+        <ul class="dropdown-menu analyse-menu">
+          <li><a  href="#tableau"  target="_self" >Complexité</a></li>
+          <li><a  href="#graphe"  target="_self" >Graphe</a></li>
         </ul></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">    
@@ -139,7 +145,7 @@ marker#end {
             <li><a href="data/arbre.json" target="_self" download="listeFichier.json" >Liste des fichiers (JSON)</a></li>
           </ul>
         </li>
-        <li><a href="#">À propos</a></li>
+        
       </ul>
     </div>
   </div>
@@ -170,12 +176,18 @@ marker#end {
             <span class="glyphicon glyphicon-play" style="font-size: 14px;"> </span>
           </button>
           <br>
-          Force:
-          <div id="sliderCharge"></div>
-          Distance des liens:
+          
+          Distance des lien(s):
           <div id="sliderDistance"></div>
-          Frictions entre noeuds:
+          Contraste des Lien(s):
+          <div id="sliderLiens"></div>
+          Force des noeud(s):
+          <div id="sliderCharge"></div>          
+          Frictions des noeud(s):
           <div id="sliderFriction"></div>
+          Taille du texte:
+          <div id="sliderText"></div>
+        
         </div>
         <div class="divbox">
           <div class="span8">Arbre</div>
