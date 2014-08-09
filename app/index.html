@@ -132,8 +132,8 @@ marker#end {
       <ul class="nav navbar-nav navbar-left">
        <li><a href="" class="dropdown-toggle" data-toggle="dropdown">Analyses <b class="caret"></b></a>
         <ul class="dropdown-menu analyse-menu">
-          <li><a  href="#tableau"  target="_self" >Complexité</a></li>
-          <li><a  href="#graphe"  target="_self" >Graphe</a></li>
+          <li><a  href="#tableau"  target="_self" >Tableau (complexité)</a></li>
+          <li><a  href="#graphe"  target="_self" >Graphe (couplage)</a></li>
         </ul></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">    
@@ -177,16 +177,19 @@ marker#end {
           </button>
           <br>
           
-          Distance des lien(s):
-          <div id="sliderDistance"></div>
-          Contraste des Lien(s):
-          <div id="sliderLiens"></div>
-          Force des noeud(s):
+        
+          Force des noeuds:
           <div id="sliderCharge"></div>          
-          Frictions des noeud(s):
+          Frictions des noeuds:
           <div id="sliderFriction"></div>
+          Distance des liens:
+          <div id="sliderDistance"></div>
+          Contraste des Liens:
+          <div id="sliderLiens"></div>
           Taille du texte:
-          <div id="sliderText"></div>
+          <div id="sliderText"></div><br>
+          <input type="checkbox" id="checkboxLiensDetails">Liens détaillés<br>
+
         
         </div>
         <div class="divbox">

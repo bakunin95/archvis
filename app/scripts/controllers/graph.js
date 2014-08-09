@@ -17,6 +17,7 @@ var graphClass = {
 	pause: false,
 	zoomFactor:1,
 	zoom: d3.behavior.zoom,
+	liensDetails: false,
 	pathColor: "#808080",
 	translateFactor: [0,0],
    // colorsList: d3.scale.category20(),
@@ -38,22 +39,28 @@ var graphClass = {
 
 	},
 	onMouseOverNode:function(d,path,node){
-		path.style('stroke', function(l) {
-			if (d === l.source || d === l.target){
-				return "red";
-			}
-			else{
-				return graphClass.pathColor;
-			}
-		});
-		path.style("opacity", function(l) {
-		 	if (d === l.source || d === l.target){
-			return 1;
-			}
-			else{
-				return 0;
-			}
-		});
+
+
+
+
+		if(graphClass.liensDetails == true){
+			path.style('stroke', function(l) {
+				if (d === l.source || d === l.target){
+					return "red";
+				}
+				else{
+					return graphClass.pathColor;
+				}
+			});
+			path.style("opacity", function(l) {
+			 	if (d === l.source || d === l.target){
+				return 1;
+				}
+				else{
+					return 0;
+				}
+			});
+		}
 	},
 	addNode: function(node){
 		var foundId =graphClass.newRelations.nodes.indexOf(node);
@@ -475,16 +482,28 @@ var graphClass = {
 	    .style("fill", function(d) { return graphClass.colorsList(d.group); })
 	    .call(node_drag);
 
-	    gnode.selectAll("circle.node").on("dblclick", function(){    
+	    /*gnode.selectAll("circle.node").on("dblclick", function(){    
 	    	graphClass.onDoubleClickNode(d3.select(this),gnode.selectAll("circle.node"));
-	    });
+	    });*/
+
 	    graphClass.svg = svg;
 
 	    node.on('mouseover', function(d) {
 	    	graphClass.onMouseOverNode(d,path,node);
 	    	svg.on("mousedown.zoom", null);
 	    	svg.on("mousemove.zoom", null);
+
 	    });
+
+
+	   // node.style.css( 'cursor', 'pointer' );
+
+
+		gnode.style('cursor', function(l) {
+			return 'move';
+		});
+
+
 
 	    gnode.on("mouseout", function(d) {
     		path.style("stroke", function(l) {
@@ -560,21 +579,21 @@ var graphClass = {
 			$("#btn-pause").removeAttr("disabled"); 
 			$("#btn-play").attr("disabled", "disabled");
 
-			$("#sliderCharge").slider({ max: 20000 , min: -20000, value: -390, change: function( event, ui ) {
+			$("#sliderCharge").slider({ max: 0 , min: -1000, value: -390, change: function( event, ui ) {
 				force.charge(ui.value).start();
 				if(graphClass.pause == true){
 					setTimeout(function(){force.stop()},1000);
 				}
 			}});
 
-			$("#sliderDistance").slider({ max: 1000 , min: -1000, value: 270, change: function( event, ui ) {
+			$("#sliderDistance").slider({ max: 700 , min: 150, value: 270, change: function( event, ui ) {
 				force.linkDistance(ui.value).start();
 				if(graphClass.pause == true){
 					setTimeout(function(){force.stop()},1000);
 				}
 			}});
 
-			$("#sliderFriction").slider({ max: 1.1 , min: 0, value: 0.9, step:0.05, change: function( event, ui ) {
+			$("#sliderFriction").slider({ max: 0.9 , min: 0, value: 0.7, step:0.05, change: function( event, ui ) {
 				force.friction(ui.value).start();
 				if(graphClass.pause == true){
 					setTimeout(function(){force.stop()},1000);
@@ -698,6 +717,19 @@ graphClass.generateGraph();
 		});
 		return false;
 	});
+
+
+
+
+
+	$("#checkboxLiensDetails").change(function () {
+	    graphClass.liensDetails = $(this).is(":checked"); 
+	});
+
+
+
+
+
 /*
 	$("#tree").fancytree({
 		//checkbox: true,

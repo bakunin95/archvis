@@ -6,15 +6,12 @@
 
 var program = require('commander'),
     constants = require( './lib/controllers/constants' );
-  //  routing = require('./lib/routing');
+
 
 
 program
   .version('0.0.1')
   .option('-t, --timer', 'affiche le temps de chargement pour chaque étapes')
-  .option('-P, --pineapple', 'Add pineapple')
-  .option('-b, --bbq', 'Add bbq sauce')
-  .option('-c, --cheese [type]', 'Add the specified type of cheese [marble]', 'marble')
   .parse(process.argv);
 
 require('./lib/routes')(program);
