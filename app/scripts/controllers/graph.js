@@ -399,11 +399,35 @@ var graphClass = {
 	drawGraph: function(data){
 
 
+
+
+//force charge -1050
+	
 		// Initialize force
     	var force = d3.layout.force()
-    	.charge(-1050)
-    	.linkDistance(230)
+    	.charge(function(d) {
+    		if(d.group == 1){
+    			return -1000;
+    		}
+    		else{
+    			return -1000;
+    		}
+    		//console.log("charge",d);
+    		
+    	})
+		//.charge(-1050)
+    	.linkDistance(function(d) {
+
+    		if(d.source.group == 1 && d.target.group == 1){
+    			return 175;
+    		}
+    		else{
+    			return 150;
+    		}
+    		
+    	})
     	.friction(0.9)
+
     	.size([graphClass.width, graphClass.height]);
     	
     	d3.select("#d3Placeholder").html("");
@@ -416,18 +440,60 @@ var graphClass = {
 		// cloner si on veux avoir data avant qu'il change.
 		graphClass.graphData = data;
 		force
+		//.gravity(0.05)
 		.nodes(data.nodes)
 		.links(data.links)
+		//.linkStrength(0.01)
+		.chargeDistance(-1000)
 		.start();
 		graphClass.data = data;
 
 		// add the links and the arrows
+		//var path = svg.append("svg:g").selectAll("path")
+				//var path = svg.append("svg:g").selectAll("path")
+
+
+
+//LINK CODE
+/*		
+
+		var path = svg.selectAll("line.link")
+       .data(data.links)
+     .enter().append("svg:line")
+       .attr("class", "link")
+       .style("stroke-width", function(d) { return Math.sqrt(d.value); })
+       .attr("x1", function(d) { return d.source.x; })
+       .attr("y1", function(d) { return d.source.y; })
+       .attr("x2", function(d) { return d.target.x; })
+       .attr("y2", function(d) { return d.target.y; });	
+
+
+*/
+//PATH CODE
+
+
+
+
+
 		var path = svg.append("svg:g").selectAll("path")
 		.data(force.links())
 		.enter().append("svg:path")
 		// .attr("class", function(d) { return "link " + d.type; })
 		.attr("class", "link")
 		.attr("marker-mid", "url(#end)");
+
+
+
+
+
+
+
+		
+
+
+
+
+
 
 		var node_drag = d3.behavior.drag()
 		.on("dragstart", dragstart)
@@ -520,7 +586,7 @@ var graphClass = {
 
 
 		function tick() {
-		    path.attr("d", function(d) {
+		   path.attr("d", function(d) {
 			    var dx = d.target.x - d.source.x,
 			        dy = d.target.y - d.source.y,
 			        dr = Math.sqrt(dx * dx + dy * dy),
@@ -531,10 +597,43 @@ var graphClass = {
 			    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0 1," + d.target.x + "," + d.target.y + "A" + dr + "," + dr + " 0 0 0," + d.source.x + "," + d.source.y + "M" + dtxs + "," + dtys +  "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
 			  });
 
+				
+/*
+
+			  path.attr("x1", function(d) { return d.source.x; })
+				  .attr("y1", function(d) { return d.source.y; })
+				  .attr("x2", function(d) { return d.target.x; })
+				  .attr("y2", function(d) { return d.target.y; });
+*/
 			text.attr("dx", function(d) { return d.x+10; })
 			.attr("dy", function(d) { return d.y+1; });
 
 			node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+		}
+
+		function tickold() {
+		    gnode.each(gravityFunction) 
+		       //adjust each node according to the custom force
+		        .attr("cx", function (d) {
+		            return d.x;
+		        })
+		        .attr("cy", function (d) {
+		            return d.y;
+		        });
+		    
+		    path.attr("x1", function (d) {
+		            return d.source.x;
+		        })
+		        .attr("y1", function (d) {
+		            return d.source.y;
+		        })
+		        .attr("x2", function (d) {
+		            return d.target.x;
+		        })
+		        .attr("y2", function (d) {
+		            return d.target.y;
+		        });
+
 		}
 
 		function moveHandler(coord){
@@ -560,9 +659,36 @@ var graphClass = {
 			//svg.on("MozMousePixelScroll.zoom", null);
 		}
 
+		function collide(node) {
+			var r = node.radius + 16,
+			nx1 = node.x - r,
+			nx2 = node.x + r,
+			ny1 = node.y - r,
+			ny2 = node.y + r;
+			return function(quad, x1, y1, x2, y2) {
+			if (quad.point && (quad.point !== node)) {
+			var x = node.x - quad.point.x,
+			y = node.y - quad.point.y,
+			l = Math.sqrt(x * x + y * y),
+			r = node.radius + quad.point.radius;
+			if (l < r) {
+			l = (l - r) / l * .5;
+			node.x -= x *= l;
+			node.y -= y *= l;
+			quad.point.x += x;
+			quad.point.y += y;
+			}
+			}
+			return x1 > nx2
+			|| x2 < nx1
+			|| y1 > ny2
+			|| y2 < ny1;
+			};
+		}
+
 		// create the zoom listener
 	    var zoomListener = d3.behavior.zoom()
-	    .scaleExtent([0.1, 3])
+	    .scaleExtent([0.1, 4])
 	    .on("zoom", zoomHandler);
 
 	    zoomListener(svg);
@@ -572,9 +698,50 @@ var graphClass = {
 
 	    var  allFiles = _.pluck(data.nodes, 'name');
 	    allFiles = allFiles.filter(Boolean);
+//8888888888888
 
+
+
+
+      /*d3.selectAll("#panLeft, #panRight, #panUp, #panDown")
+        .on("click", function () {
+          d3.event.preventDefault();
+          var id = d3.select(this).attr("id");
+          panZoom.pan(id);
+        });*/
+
+
+
+
+
+
+
+
+//*888888888888888888888888888
 					    
 		$(document).ready(function(){
+
+
+			$("#panLeft").on("click", function () {
+				console.log("d3",d3);
+				graphClass.zoomFactor = graphClass.zoomFactor+0.1;				
+				gnode.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
+				path.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");		
+        	});
+
+			$("#zoomIn").on("click", function () {
+				console.log("d3",d3);
+				graphClass.zoomFactor = graphClass.zoomFactor+0.1;				
+				gnode.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
+				path.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");		
+        	});
+
+        	$("#zoomOut").on("click", function () {
+				console.log("d3",d3);
+				graphClass.zoomFactor = graphClass.zoomFactor-0.1;				
+				gnode.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
+				path.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");		
+        	});
 					    
 			$("#btn-pause").removeAttr("disabled"); 
 			$("#btn-play").attr("disabled", "disabled");
