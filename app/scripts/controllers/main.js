@@ -16,23 +16,19 @@ jQuery(function($) {
 		$("#leftPanel").remove();
 	}
 
-	$('#mainLayout').height($(window).height()).layout({ applyDefaultStyles: true, east: { size: 10}  });
+	$('#mainLayout').height($(window).height()).layout({ applyDefaultStyles: true, east: { size: 10}, south: {size:100}  });
 
 	
 	$(".analyse-menu a").click(function(){
-console.log(this);
-console.log($(this));
-
-
 		window.location.hash = $(this)[0].hash;
 		window.location.reload(true);
 	});
 
 	
-
+	$("#menu").metisMenu();
 
 	
-
+	
 
 
 });

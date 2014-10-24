@@ -14,6 +14,7 @@ body {
 
 /* Custom page header */
 .header {
+    
   border-bottom: 1px solid #e5e5e5;
 }
 /* Make the masthead heading the same height as the navigation */
@@ -22,6 +23,18 @@ body {
   margin-bottom: 0;
   line-height: 40px;
   padding-bottom: 19px;
+   
+}
+
+.navbar-header {
+  margin-top:-10px;
+  padding-right:120px;
+color:#fff !important;
+font-family: 'Lobster', cursive;
+}
+
+#topBar {
+    
 }
 
 /* Custom page footer */
@@ -34,7 +47,7 @@ body {
 /* Customize container */
 @media (min-width: 768px) {
   .container {
-    max-width: 730px;
+   margin-left:10px;
   }
 }
 .container-narrow > hr {
@@ -81,10 +94,9 @@ body {
   
 td {font-size:10px !important}
 
-.ui-layout-west {
-  background-color: #FAFAFA !important;
+#animationCtrl {
+  text-align: center;
 }
-
 
 /*Taken from Leaflet */
 /* control positioning */
@@ -299,3 +311,58 @@ td {font-size:10px !important}
   left:26px;
   top:80px;
 }
+
+#mainPanel {
+  height:800px;
+  background-color:#dedede;
+}
+#leftPanel {
+border: none !important;
+  background-color:#222 !important;
+    padding-left:0px !important;
+ padding-right:0px !important;
+}
+#rightPanel {
+
+  background-color:#e7e7e7;
+}
+#centerPanel {
+
+}
+
+#bottomPanel{
+  background-color:#222 !important;
+ 
+}
+
+.accordion-heading {
+  color: #fff;
+  height: 39px;
+  border-bottom: 1px solid #ccc;
+  vertical-align: text-bottom;
+}
+
+.accordion-heading a:link, 
+.accordion-heading a:visited, 
+.accordion-heading a:hover { 
+ color: #fff; 
+ text-decoration: none;
+ text-transform:uppercase; 
+ font-size: 1.1em;
+} 
+
+.divbox{
+  text-align:center;  
+  color:#fff;
+}
+
+.ui-slider-handle { 
+  width:3px;
+  padding:2px !important; 
+}
+
+#testDIV{
+  color:#fff;
+  font-family:"FontAwesome";
+}
+

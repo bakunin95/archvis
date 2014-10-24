@@ -4,6 +4,22 @@
 jQuery(function($) {
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 $('#content').delegate( ".filter", "click", function() {
 	console.log($(this).val());
 	graphClass.changeFilter($(this).val());
@@ -13,12 +29,12 @@ console.log(d3.scale.category20());
 var graphClass = {
 	force: d3.layout.force(),
 	width: $("#mainLayout").layout().panes.center.innerWidth()-30,
-	height: $("#mainLayout").layout().panes.center.innerHeight()-122,  
+	height: $("#mainLayout").layout().panes.center.innerHeight()-50,  
 	pause: false,
 	zoomFactor:1,
 	zoom: d3.behavior.zoom,
 	liensDetails: false,
-	pathColor: "#808080",
+	pathColor: "#666666",
 	translateFactor: [0,0],
    // colorsList: d3.scale.category20(),
    	colorsList: d3.scale.ordinal().range(["#FF0000","#0000FF","#B2B2FF","#D9D9FF","#6699FF",
@@ -250,10 +266,10 @@ var graphClass = {
 			  break;
 			  default: 
 			  	if(d.group == 1){
-		    		return 15;
+		    		return 20;
 		    	}
 		    	else{
-		    		return 10;
+		    		return 15;
 		    	}
 			}		
 			tick();
@@ -398,9 +414,6 @@ var graphClass = {
 	},
 	drawGraph: function(data){
 
-
-
-
 //force charge -1050
 	
 		// Initialize force
@@ -538,15 +551,37 @@ var graphClass = {
 	    .attr("id", function(d){return "circle-node-"+ d.name})
 
 	    .attr("r", function(d){
-	    	if(d.group == 1){
-	    		return 15;
+	    	if(d.group == 1 || d.group == 2){
+	    		return 17;
 	    	}
 	    	else{
-	    		return 10;
+	    		return 12;
 	    	}
 	    })
 	    .style("fill", function(d) { return graphClass.colorsList(d.group); })
 	    .call(node_drag);
+
+
+
+
+
+
+
+
+/*
+
+node.append('text')
+  //  .attr('font-family', 'FontAwesome')
+    .attr('font-color', 'black')
+    //.attr('font-size', function(d) { return d.size+'em'} )
+    .text(function(d) { return 'T' }); 
+ //   .text(function(d) { return '\uf118' }); 
+*/
+
+
+
+
+
 
 	    /*gnode.selectAll("circle.node").on("dblclick", function(){    
 	    	graphClass.onDoubleClickNode(d3.select(this),gnode.selectAll("circle.node"));
@@ -561,6 +596,7 @@ var graphClass = {
 
 	    });
 
+		
 
 	   // node.style.css( 'cursor', 'pointer' );
 
@@ -585,21 +621,35 @@ var graphClass = {
 		});
 
 
+
 		function tick() {
-		   path.attr("d", function(d) {
+		 /* path.attr("d", function(d) {
 			    var dx = d.target.x - d.source.x,
 			        dy = d.target.y - d.source.y,
 			        dr = Math.sqrt(dx * dx + dy * dy),
 			        theta = Math.atan2(dy, dx) + Math.PI / 7.85,
 			        d90 = Math.PI / 2,
+
+
 			        dtxs = d.target.x - 10  * Math.cos(theta),
 			        dtys = d.target.y - 10 * Math.sin(theta);
 			    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0 1," + d.target.x + "," + d.target.y + "A" + dr + "," + dr + " 0 0 0," + d.source.x + "," + d.source.y + "M" + dtxs + "," + dtys +  "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
-			  });
+			  });*/
 
-				
+ path.attr("d", function(d) {
+    var dx = d.target.x - d.source.x,
+        dy = d.target.y - d.source.y,
+        dr = Math.sqrt(dx * dx + dy * dy),
+        theta = Math.atan2(dy, dx) + Math.PI / 7.85,
+        d90 = Math.PI / 2,
+        dtxs = d.target.x - 10 * Math.cos(theta),
+        dtys = d.target.y - 10 * Math.sin(theta);
+    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0 1," + d.target.x + "," + d.target.y + "A" + dr + "," + dr + " 0 0 0," + d.source.x + "," + d.source.y + "M" + dtxs + "," + dtys +  "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
+  });
+
+	
+
 /*
-
 			  path.attr("x1", function(d) { return d.source.x; })
 				  .attr("y1", function(d) { return d.source.y; })
 				  .attr("x2", function(d) { return d.target.x; })
@@ -608,10 +658,18 @@ var graphClass = {
 			text.attr("dx", function(d) { return d.x+10; })
 			.attr("dy", function(d) { return d.y+1; });
 
+			icon.attr("dx", function(d) { return d.x; })
+			.attr("dy", function(d) { return d.y; });
+
+/*
+			icon.attr("x", function(d) { return d.x; })
+			.attr("y", function(d) { return d.y; });
+*/
+
 			node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 		}
 
-		function tickold() {
+	/*	function tickold() {
 		    gnode.each(gravityFunction) 
 		       //adjust each node according to the custom force
 		        .attr("cx", function (d) {
@@ -634,7 +692,7 @@ var graphClass = {
 		            return d.target.y;
 		        });
 
-		}
+		}*/
 
 		function moveHandler(coord){
 			gnode.transition().duration(1000).attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
@@ -720,7 +778,7 @@ var graphClass = {
 //*888888888888888888888888888
 					    
 		$(document).ready(function(){
-
+/*
 
 			$("#panLeft").on("click", function () {
 				console.log("d3",d3);
@@ -742,7 +800,7 @@ var graphClass = {
 				gnode.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
 				path.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");		
         	});
-					    
+					*/    
 			$("#btn-pause").removeAttr("disabled"); 
 			$("#btn-play").attr("disabled", "disabled");
 
@@ -829,9 +887,85 @@ var graphClass = {
 		});
 
 		    var text = gnode.append("text")
+		    .attr('font-family', 'sans-serif')
+		    .attr('font-size','11px')
+		    .style('text-shadow','0 2px 0 #fff, 2px 0 0 #fff, 0 -2px 0 #fff, -2px 0 0 #fff')
 		    .text(function(d) {
 		    	return d.name;
 		    });
+
+
+
+            /*    text-shadow: 0 2px 0 #fff, 2px 0 0 #fff, 0 -2px 0 #fff, -2px 0 0 #fff;*/
+
+
+			var icon = gnode.append('text')
+		    .attr('text-anchor', 'middle')
+		    .attr('dominant-baseline', 'central')
+		    .attr('font-family', 'FontAwesome')
+		    .attr('font-weight','bold')
+		    //.style("fill-opacity", 0.8)
+			.text(function(d) { 
+				var code = "";
+				switch(d.group){
+					case 1:
+						code =  '\uf0f6';
+					break;
+					case 2:
+						code = '\uf1c9';
+					break;
+					case 3:
+						code = '\uf1fc';
+					break;
+					case 5:
+					 	code = '\uf0c1';
+					break;
+					case 6:
+						code = '\uf13d';
+					break;
+					case 10:
+					case 12:
+						code = '\uf127';
+					break
+					case 15:
+						code = '\uf08e';
+					break;
+				}
+				return code;
+
+			}); 
+
+/*	
+	1: html
+	2: javascript externe
+	3: css externe
+	4: javascript interne
+	5: liens externe
+	6: ancres HTML (#Pages)
+	7: liens courriel
+	8: css interne
+	9: requête ajax
+	10: javascript externe (mort)
+	11: javascript externe (lien)
+	12: css externe (mort)
+	13: css externe (lien)
+	14: PHP
+	15: Autre
+	16: Template
+	*/
+
+
+
+
+/*
+			var icon = gnode.append("image")
+    .attr("xlink:href", "https://github.com/favicon.ico")
+    .attr("x", -28)
+    .attr("y", -8)
+    .attr("width", 16)
+    .attr("height", 16);*/
+
+		
 
 		    force.on("tick", tick);
 	}
@@ -895,7 +1029,26 @@ graphClass.generateGraph();
 
 
 
+	$("#download-svg").on("click", function(){
+                    var serializer = new XMLSerializer();
+                    var xmlString = serializer.serializeToString(d3.select('svg').node());
+                    var imgData = 'data:image/svg+xml;base64,' + btoa(xmlString);
+                    
 
+                    $("#download-svg").attr("href",imgData);
+                        
+});
+
+
+
+/*
+	 $("#download-svg").attr("href", "data:image/svg+xml;charset=utf-8;base64," + btoa(unescape(encodeURIComponent(
+		d3.selectAll("svg").attr("version", "1.1").attr("xmlns", "http://www.w3.org/2000/svg")
+		.node().parentNode.innerHTML)
+		)
+		)
+		)
+		.attr("download",filename);*/
 
 /*
 	$("#tree").fancytree({
