@@ -903,8 +903,10 @@ node.append('text')
 		    .attr('text-anchor', 'middle')
 		    .attr('dominant-baseline', 'central')
 		    .attr('font-family', 'FontAwesome')
-		    .attr('font-weight','bold')
-		    //.style("fill-opacity", 0.8)
+		  //  .attr('font-weight','bold')
+		    .style("text-shadow", '1px 1px #fff')
+		    		    //.style("fill-opacity", 0.8)
+
 			.text(function(d) { 
 				var code = "";
 				switch(d.group){
