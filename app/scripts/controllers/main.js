@@ -16,8 +16,7 @@ jQuery(function($) {
 		$("#leftPanel").remove();
 	}
 
-	$('#mainLayout').height($(window).height()).layout({ applyDefaultStyles: true, east: { size: 10}, south: {size:100}  });
-
+	$('#mainLayout').height($(window).height()).layout({ applyDefaultStyles: false});
 	
 	$(".analyse-menu a").click(function(){
 		window.location.hash = $(this)[0].hash;

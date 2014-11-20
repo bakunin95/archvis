@@ -1,7 +1,6 @@
 /* Space out content a bit */
 body {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -21,16 +20,14 @@ body {
 .header h3 {
   margin-top: 0;
   margin-bottom: 0;
-  line-height: 40px;
+  line-height: 40px; 
   padding-bottom: 19px;
    
 }
 
-.navbar-header {
-  margin-top:-10px;
-  padding-right:120px;
-color:#fff !important;
-font-family: 'Lobster', cursive;
+.logo-container {
+  text-align:center;
+  padding:10px;
 }
 
 #topBar {
@@ -317,10 +314,11 @@ td {font-size:10px !important}
   background-color:#dedede;
 }
 #leftPanel {
-border: none !important;
+  border: none !important;
   background-color:#222 !important;
-    padding-left:0px !important;
- padding-right:0px !important;
+  padding-left:0px !important;
+  padding-right:0px !important;
+
 }
 #rightPanel {
 
@@ -328,6 +326,8 @@ border: none !important;
 }
 #centerPanel {
 
+  overflow:hidden !important;
+  /*padding:20px;*/
 }
 
 #bottomPanel{
@@ -352,6 +352,7 @@ border: none !important;
 } 
 
 .divbox{
+  padding:10px;
   text-align:center;  
   color:#fff;
 }
@@ -366,3 +367,13 @@ border: none !important;
   font-family:"FontAwesome";
 }
 
+#classDiagram{
+}
+
+.iviewer_common {
+    position:absolute;
+    top:30px !important;
+    border: 1px  solid #000;
+    height: 28px;
+    z-index: 5000;
+}

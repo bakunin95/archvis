@@ -31,6 +31,8 @@ var graphClass = {
 	width: $("#mainLayout").layout().panes.center.innerWidth()-30,
 	height: $("#mainLayout").layout().panes.center.innerHeight()-50,  
 	pause: false,
+	foci: 0.002,
+	fociCount: 50,
 	zoomFactor:1,
 	zoom: d3.behavior.zoom,
 	liensDetails: false,
@@ -420,7 +422,7 @@ var graphClass = {
     	var force = d3.layout.force()
     	.charge(function(d) {
     		if(d.group == 1){
-    			return -1000;
+    			return -1200;
     		}
     		else{
     			return -1000;
@@ -440,6 +442,8 @@ var graphClass = {
     		
     	})
     	.friction(0.9)
+    	.gravity(0.1)
+
 
     	.size([graphClass.width, graphClass.height]);
     	
@@ -484,8 +488,7 @@ var graphClass = {
 */
 //PATH CODE
 
-
-
+var hullg = svg.selectAll("path");
 
 
 		var path = svg.append("svg:g").selectAll("path")
@@ -501,7 +504,8 @@ var graphClass = {
 
 
 
-		
+		var hulls = svg.selectAll(".hull");
+
 
 
 
@@ -538,6 +542,63 @@ var graphClass = {
 	    }
 
 
+	    function convexHulls(nodes, index, offset) {
+
+
+
+
+		  var hulls = {};
+
+
+		  gnode.each(function(n,i){    
+		    		 console.log("n",n);
+		        console.log("nx",n.x);
+
+		    var i = index(n),
+		    l = hulls[i] || (hulls[i] = []);
+
+
+		       
+
+
+		    l.push([n.x-offset, n.y-offset]);
+		    l.push([n.x-offset, n.y+offset]);
+		    l.push([n.x+offset, n.y-offset]);
+		    l.push([n.x+offset, n.y+offset]);
+		  });
+
+
+
+		  // create point sets
+		  for (var k=0; k<nodes.length; ++k) {
+		    var n = nodes[k];
+		    if (n.size) continue;
+		    var i = index(n),
+		        l = hulls[i] || (hulls[i] = []);
+
+
+		       
+
+
+		    l.push([n.x-offset, n.y-offset]);
+		    l.push([n.x-offset, n.y+offset]);
+		    l.push([n.x+offset, n.y-offset]);
+		    l.push([n.x+offset, n.y+offset]);
+		  }
+
+		  // create convex hulls
+		  var hullset = [];
+		  for (i in hulls) {
+		    hullset.push({group: i, path: d3.geom.hull(hulls[i])});
+		  }
+
+		  return hullset;
+		}
+
+		function getGroup(n) { return n.group; }
+
+
+
    		graphClass.createLegend(svg);
 
 	    // Créer les noeuds, textes et liens
@@ -564,7 +625,55 @@ var graphClass = {
 
 
 
+//var nodes = d3.range(100).map(Object);
+ 
+//var groups = d3.nest().key(function(d) { return d & 3; }).entries(nodes);
 
+
+
+//var groups = d3.range(15).map(Object);
+/*
+gnode.each(function(n,i){    
+	console.log(n);
+	console.log(i);
+
+n.group
+
+
+});*/
+
+
+
+//var groups = d3.range(2).map(Object);
+
+//var groups = [{0:[1,2,3,4,5,6,7,8,9,10]},{1:[11,12,13,14,15,16,17,18,19,20]}];
+
+
+
+
+
+/*
+var groups = [{0:[1,2,3,4,5]}];
+
+var groupPath = function(d) {
+	//console.log("thisisD",d.values.map);
+    return "M" + 
+      d3.geom.hull()
+        .join("L")
+    + "Z";
+};
+
+var groupFill = function(d, i) { 
+
+
+	return graphClass.colorsList(d.group); };
+
+
+
+*/
+
+
+		
 
 
 
@@ -621,8 +730,76 @@ node.append('text')
 		});
 
 
+		var tickCount = 0;
+		function tick(e) {
 
-		function tick() {
+
+
+
+/*
+			svg.selectAll("path")
+		    .data(groups)
+		      .attr("d", groupPath)
+		    .enter().insert("path", "circle")
+		      .style("fill", groupFill)
+		      .style("stroke", groupFill)
+		      .style("stroke-width", 40)
+		      .style("stroke-linejoin", "round")
+		      .style("opacity", .2)
+		      .attr("d", groupPath);*/
+
+var groupsOne = [];
+var groupsTwo = [];
+gnode.each(function(n,i){    
+ if(n.group == 1 || n.group == 3){
+ 	groupsOne.push([n.x,n.y]);
+ }
+  if(n.group == 2){
+ 	groupsTwo.push([n.x,n.y]);
+ }
+});
+
+
+
+var groupPathOne = "M" +d3.geom.hull(groupsOne).join("L")
+    + "Z";
+var groupPathTwo = "M" +d3.geom.hull(groupsTwo).join("L")
+    + "Z";
+
+
+svg.selectAll(".hull").remove();
+
+var hullRed = svg.insert("path", "g")
+        .style("fill", "#F5A9BC")
+        .style("stroke", "#F5A9BC")
+        .style("stroke-width", 40)
+        .style("stroke-linejoin", "round")
+        .style("opacity", .2)
+        .attr("d", groupPathOne)
+        .attr("class","hull");
+
+
+var hullBlue = svg.insert("path", "g")
+        .style("fill", "#A9D0F5")
+        .style("stroke", "#A9D0F5")
+        .style("stroke-width", 40)
+        .style("stroke-linejoin", "round")
+        .style("opacity", .2)
+        .attr("d", groupPathTwo)
+        .attr("class","hull");
+
+
+			hullRed.attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
+			hullBlue.attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
+
+			
+/*
+if (!hull.empty()) {
+      hull.data(convexHulls(gnode, getGroup, off))
+          .attr("d", drawCluster);
+    }
+ */
+
 		 /* path.attr("d", function(d) {
 			    var dx = d.target.x - d.source.x,
 			        dy = d.target.y - d.source.y,
@@ -635,17 +812,17 @@ node.append('text')
 			        dtys = d.target.y - 10 * Math.sin(theta);
 			    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0 1," + d.target.x + "," + d.target.y + "A" + dr + "," + dr + " 0 0 0," + d.source.x + "," + d.source.y + "M" + dtxs + "," + dtys +  "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
 			  });*/
-
- path.attr("d", function(d) {
-    var dx = d.target.x - d.source.x,
-        dy = d.target.y - d.source.y,
-        dr = Math.sqrt(dx * dx + dy * dy),
-        theta = Math.atan2(dy, dx) + Math.PI / 7.85,
-        d90 = Math.PI / 2,
-        dtxs = d.target.x - 10 * Math.cos(theta),
-        dtys = d.target.y - 10 * Math.sin(theta);
-    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0 1," + d.target.x + "," + d.target.y + "A" + dr + "," + dr + " 0 0 0," + d.source.x + "," + d.source.y + "M" + dtxs + "," + dtys +  "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
-  });
+			
+			 path.attr("d", function(d) {
+			    var dx = d.target.x - d.source.x,
+			        dy = d.target.y - d.source.y,
+			        dr = Math.sqrt(dx * dx + dy * dy),
+			        theta = Math.atan2(dy, dx) + Math.PI / 7.85,
+			        d90 = Math.PI / 2,
+			        dtxs = d.target.x - 10 * Math.cos(theta),
+			        dtys = d.target.y - 10 * Math.sin(theta);
+			    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0 1," + d.target.x + "," + d.target.y + "A" + dr + "," + dr + " 0 0 0," + d.source.x + "," + d.source.y + "M" + dtxs + "," + dtys +  "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
+			  });
 
 	
 
@@ -666,8 +843,73 @@ node.append('text')
 			.attr("y", function(d) { return d.y; });
 */
 
+			/*
+			node.forEach(function(o, i) {
+			    o.y += (foci[o.id].y - o.y) * k;
+			    o.x += (foci[o.id].x - o.x) * k;
+			});*/
+
+
+//.selectAll("circle.node")
+
+			graphClass.fociCount = graphClass.fociCount + 1;
+
+			if(graphClass.fociCount < 50){
+				gnode.each(function(o,i){    
+		    		o.y += (foci[o.group].y - o.y) * graphClass.foci;
+				    o.x += (foci[o.group].x - o.x) * graphClass.foci;
+		    	});
+			}
+
+
+		/*	var q = d3.geom.quadtree(gnode),
+			i = 0,
+			n = gnode.length;*/
+
+
+			//while (++i < n) q.visit(collide(gnode[i]));
+                 
+
+
+  			//while (++i < n) q.visit(collide(gnode[i]));
+  			gnode.each(collideDetect(0.5));
+
 			node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 		}
+
+
+var padding = 5, // separation between circles
+    radius=20;
+
+		function collideDetect(alpha) {
+		  var quadtree = d3.geom.quadtree(gnode);
+		  return function(d) {
+		    var rb = 2*radius + padding,
+		        nx1 = d.x - rb,
+		        nx2 = d.x + rb,
+		        ny1 = d.y - rb,
+		        ny2 = d.y + rb;
+		    
+		    quadtree.visit(function(quad, x1, y1, x2, y2) {
+		      if (quad.point && (quad.point !== d)) {
+		        var x = d.x - quad.point.x,
+		            y = d.y - quad.point.y,
+		            l = Math.sqrt(x * x + y * y);
+		          if (l < rb) {
+		          l = (l - rb) / l * alpha;
+		          d.x -= x *= l;
+		          d.y -= y *= l;
+		          quad.point.x += x;
+		          quad.point.y += y;
+		        }
+		      }
+		      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+		    });
+		  };
+		}
+
+
+
 
 	/*	function tickold() {
 		    gnode.each(gravityFunction) 
@@ -695,8 +937,14 @@ node.append('text')
 		}*/
 
 		function moveHandler(coord){
-			gnode.transition().duration(1000).attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
-			path.transition().duration(1000).attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
+
+			svg.selectAll(".hull").transition().attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
+			gnode.transition().attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
+			path.transition().attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
+
+
+			graphClass.translateFactor = coord;
+			d3.event.translate = coord;
 			svg.on("dblclick.zoom", null);
 		}
 
@@ -708,6 +956,11 @@ node.append('text')
 			// function for handling zoom event
 			gnode.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 			path.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+
+
+			svg.selectAll(".hull").attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+
+
 		  	//svg.on("mousedown.zoom", null);
 			//svg.on("mousemove.zoom", null);
 			svg.on("dblclick.zoom", null);
@@ -717,31 +970,61 @@ node.append('text')
 			//svg.on("MozMousePixelScroll.zoom", null);
 		}
 
+		//function collide(gnode,alpha) {
+		 // var quadtree = d3.geom.quadtree(gnode);
+		  /*return function(d) {
+		    var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
+		        nx1 = d.x - r,
+		        nx2 = d.x + r,
+		        ny1 = d.y - r,
+		        ny2 = d.y + r;
+		    quadtree.visit(function(quad, x1, y1, x2, y2) {
+		      if (quad.point && (quad.point !== d)) {
+		        var x = d.x - quad.point.x,
+		            y = d.y - quad.point.y,
+		            l = Math.sqrt(x * x + y * y),
+		            r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? padding : clusterPadding);
+		        if (l < r) {
+		          l = (l - r) / l * alpha;
+		          d.x -= x *= l;
+		          d.y -= y *= l;
+		          quad.point.x += x;
+		          quad.point.y += y;
+		        }
+		      }
+		      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+		    });
+		  };*/
+		//}
+
+
 		function collide(node) {
-			var r = node.radius + 16,
-			nx1 = node.x - r,
-			nx2 = node.x + r,
-			ny1 = node.y - r,
-			ny2 = node.y + r;
-			return function(quad, x1, y1, x2, y2) {
-			if (quad.point && (quad.point !== node)) {
-			var x = node.x - quad.point.x,
-			y = node.y - quad.point.y,
-			l = Math.sqrt(x * x + y * y),
-			r = node.radius + quad.point.radius;
-			if (l < r) {
-			l = (l - r) / l * .5;
-			node.x -= x *= l;
-			node.y -= y *= l;
-			quad.point.x += x;
-			quad.point.y += y;
-			}
-			}
-			return x1 > nx2
-			|| x2 < nx1
-			|| y1 > ny2
-			|| y2 < ny1;
-			};
+		 // change radius to count
+		 // node.count + 16
+		  var r = node.count + 16,
+		      nx1 = node.x - r,
+		      nx2 = node.x + r,
+		      ny1 = node.y - r,
+		      ny2 = node.y + r;
+		  return function(quad, x1, y1, x2, y2) {
+		    if (quad.point && (quad.point !== node)) {
+		      var x = node.x - quad.point.x,
+		          y = node.y - quad.point.y,
+		          l = Math.sqrt(x * x + y * y),
+		          r = node.radius + quad.point.radius;
+		      if (l < r) {
+		        l = (l - r) / l * .5;
+		        node.x -= x *= l;
+		        node.y -= y *= l;
+		        quad.point.x += x;
+		        quad.point.y += y;
+		      }
+		    }
+		    return x1 > nx2
+		        || x2 < nx1
+		        || y1 > ny2
+		        || y2 < ny1;
+		  };
 		}
 
 		// create the zoom listener
@@ -767,8 +1050,23 @@ node.append('text')
           var id = d3.select(this).attr("id");
           panZoom.pan(id);
         });*/
+function drawCluster(d) {
+  return curve(d.path); // 0.8
+}
 
 
+
+/*
+var hullg = svg.append("svg:g").selectAll("path.hull");
+
+//hullg.selectAll("path.hull").remove();
+var hull = hullg.selectAll("path.hull")
+      .data(convexHulls(gnode, getGroup, 15))
+    .enter().append("path")
+      .attr("class", "hull")
+      .attr("d", drawCluster)
+      .style("fill", function(d) { return fill(d.group); });
+*/
 
 
 
@@ -803,6 +1101,24 @@ node.append('text')
 					*/    
 			$("#btn-pause").removeAttr("disabled"); 
 			$("#btn-play").attr("disabled", "disabled");
+
+
+		
+
+            $("#sliderGravity").slider({ max: 1 , min: 0, value: 0.1, step: 0.01, change: function( event, ui ) {
+				force.gravity(ui.value).start();
+				if(graphClass.pause == true){
+					setTimeout(function(){force.stop()},1000);
+				}
+			}});
+
+			$("#sliderFoci").slider({ max: 0.05 , min: 0.00005, value: 0.002, step:0.001, change: function( event, ui ) {
+				graphClass.fociCount = 0;
+				graphClass.foci = ui.value;
+				if(graphClass.pause == true){
+					setTimeout(function(){force.stop()},1000);
+				}
+			}});
 
 			$("#sliderCharge").slider({ max: 0 , min: -1000, value: -390, change: function( event, ui ) {
 				force.charge(ui.value).start();
@@ -904,7 +1220,7 @@ node.append('text')
 		    .attr('dominant-baseline', 'central')
 		    .attr('font-family', 'FontAwesome')
 		  //  .attr('font-weight','bold')
-		    .style("text-shadow", '1px 1px #fff')
+		   // .style("text-shadow", '1px 1px #fff')
 		    		    //.style("fill-opacity", 0.8)
 
 			.text(function(d) { 
@@ -936,6 +1252,19 @@ node.append('text')
 				return code;
 
 			}); 
+
+
+	var topLeft = {x: 150, y: 150};
+	var topRight = {x: 150, y: 850};
+	var bottomLeft = {x: 850, y: 150};
+	var bottomRight = {x: 850, y: 850};
+
+    var foci = [topLeft,topLeft, topRight, bottomLeft, topRight, bottomRight,
+    			bottomRight,bottomRight,bottomLeft,bottomRight,topRight,
+    			topRight,bottomLeft,bottomLeft,bottomRight,bottomRight,
+    			bottomRight,bottomRight,bottomRight,bottomRight];
+
+
 
 /*	
 	1: html

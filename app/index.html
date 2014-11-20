@@ -108,6 +108,7 @@ font-style: normal;
         <script src="bower_components/jquery.layout/dist/jquery.layout-latest.min.js"></script>
         <script src="bower_components/underscore/underscore.js"></script>
         <script src="bower_components/fancytree/dist/jquery.fancytree-all.js" type="text/javascript"></script>
+        <script src="bower_components/iviewer/jquery.iviewer.js" type="text/javascript"></script>
         <script src="bower_components/async/lib/async.js" type="text/javascript"></script>
 
         <script src="bower_components/metisMenu/dist/jquery.metisMenu.js"></script>
@@ -115,6 +116,8 @@ font-style: normal;
 
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/routes.js"></script>
+                <script src="scripts/wheelzoom.js"></script>
+
         <script src="bower_components/codemirror/lib/codemirror.js"></script>
         <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css">
         <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
@@ -125,6 +128,8 @@ font-style: normal;
         <link href="bower_components/jquery.layout/dist/layout-default-latest.css" rel="stylesheet"/>
         <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
         <link href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet"/>
+        <link href="bower_components/iviewer/jquery.iviewer.css" rel="stylesheet"/>
+
 
         <link href="bower_components/metisMenu/dist/jquery.metisMenu.css" rel="stylesheet"/>
         <link href="bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
@@ -138,43 +143,16 @@ font-style: normal;
 
     </head>
     <body>
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div id="topbar" class="container">
-                <div class="navbar-header"><h3>Web application visualiser</h3>
-                        
-                </div>
-                <ul class="nav navbar-nav navbar-left">
-                    <li><a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-info-circle"></span> Website Information </a></li>
-                   
-
-                </ul>
-                 
-                <ul class="nav navbar-nav navbar-right"> 
-                    <li><a   download="download" ><span class="fa fa-save"></span> Save </a></li>
-                    <li><a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-print"></span> Print </a></li>   
-                    <li class="dropdown">
-                        <a  href="" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-download"></span> Download  <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-
-                            <li><a id="download-svg" target="_self" download="graph.svg" >Graph (SVG)</a></li>
-
-                            <li><a href="data/tableau.json" target="_self" download="analyseSimple.json" >Analyse simple (JSON)</a></li>
-                            <li><a href="data/graphe.json" target="_self" download="analyseEtCouplage.json" >Analyse et couplage (JSON)</a></li>
-                            <li><a href="data/arbre.json" target="_self" download="listeFichier.json" >Liste des fichiers (JSON)</a></li>
-                        </ul>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
         <div id="mainLayout">
             <div class="ui-layout-center" id="centerPanel">
-                <br>
                 <div id="content"></div>
             </div>
-            <div class="ui-layout-west" id="leftPanel">Right
-                <br>
-                <div class="row-fluid">
+            <div class="ui-layout-west" id="leftPanel">
+                
+                <div >
+                 <div class="logo-container"><img src="images/logo.png"/><br>
+                        
+                </div>
                     <div class="span">
                         <form class="navbar-form" role="search">
                             <div class="input-group">
@@ -208,11 +186,29 @@ font-style: normal;
 
                     <div class="clearfix">
                         <aside class="sidebar">
+
                             <nav class="sidebar-nav">
                                 <ul id="menu">
+
+ <li><a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-info-circle"></span> Website Information </a></li>
+                     <li><a href="#" target="_self"><span class="fa fa-paper-plane"></span> High Level view</a></li>
+
+                    
+                    <li><a href="#classDiagram" target="_self"><span class="fa fa-file-image-o"></span> Class Diagram</a></li>
+
+
                                     <li>
                                         <a href="#"><span class="fa fa-gear"></span> Animation Settings<span class="glyphicon arrow"></span></a>
                                         <ul>
+                                            <li><a href="#">Gravity</a>
+                                            <ul><li>
+                                            <div class="divbox">  Strength:
+                                                    <div id="sliderGravity"></div>          
+                                                    Foci:
+                                                    <div id="sliderFoci"></div>
+                                                </div>
+                                                </li></ul>
+                                            </li>
                                             <li><a href="#">Nodes</a>
                                             <ul><li>
                                             <div class="divbox">  Strength:
@@ -266,7 +262,18 @@ font-style: normal;
                                             </div>
                                         </ul>
                                     </li>
+                                    <li>
+                                        <a  href="#" ><span class="fa fa-download"></span> Download   <span class="glyphicon arrow"></span>
+                                        <ul><li><a id="download-svg" target="_self" download="graph.svg" >Graph (SVG)</a></li>
+                                            <li><a href="data/tableau.json" target="_self" download="analyseSimple.json" >Analyse simple (JSON)</a></li>
+                                            <li><a href="data/graphe.json" target="_self" download="analyseEtCouplage.json" >Analyse et couplage (JSON)</a></li>
+                                            <li><a href="data/arbre.json" target="_self" download="listeFichier.json" >Liste des fichiers (JSON)</a></li>
+                                        </ul>
+                                    </li>
 
+                                    <li><a  href="#" download="Graph.svg" ><span class="fa fa-save"></span> Save </a></li>
+                                    <li><a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-print"></span> Print </a></li>   
+                    
                                 </ul>
                             </nav>
                         </aside>
