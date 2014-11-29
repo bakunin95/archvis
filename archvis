@@ -14,4 +14,4 @@ program
   .option('-t, --timer', 'affiche le temps de chargement pour chaque étapes')
   .parse(process.argv);
 
-require('./lib/routes')(program);
+require('./lib/main')(program);

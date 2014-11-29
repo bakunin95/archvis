@@ -42,6 +42,7 @@
     "process": "^0.7.0",
     "promise": "^5.0.0",
     "recursive-readdir": "^1.1.1",
+    "relex": "^0.1.1",
     "rest": "^1.1.0",
     "static-favicon": "~1.0.1",
     "when": "^3.2.2"
