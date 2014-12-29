@@ -7,19 +7,6 @@ jQuery(function($) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 $('#content').delegate( ".filter", "click", function() {
 	console.log($(this).val());
 	graphClass.changeFilter($(this).val());
@@ -101,7 +88,7 @@ var graphClass = {
 			    	return 10+d.complexityNormalyzed.reportCount*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -110,11 +97,11 @@ var graphClass = {
 				}
 			  break;
 			  case "cyclomatic":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.aggregate.cyclomaticDensity*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -123,11 +110,11 @@ var graphClass = {
 				}
 			  break;
 			  case "vocabulaire":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.vocabulary*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -136,11 +123,11 @@ var graphClass = {
 				}
 			  break;
 			  case "volume":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.volume*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -149,11 +136,11 @@ var graphClass = {
 				}
 			  break;
 			  case "effort":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.effort*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -162,11 +149,11 @@ var graphClass = {
 				}
 			  break;
 			   case "difficulte":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.difficulty*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -175,11 +162,11 @@ var graphClass = {
 				}
 			  break;
 			   case "bogues":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.bugs*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -188,11 +175,11 @@ var graphClass = {
 				}
 			  break;
 			   case "temps":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.time*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -201,11 +188,11 @@ var graphClass = {
 				}
 			  break;
 			   case "operators":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.operators.distinct*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -214,11 +201,11 @@ var graphClass = {
 				}
 			  break;
 			   case "operands":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.aggregate.halstead.operands.distinct*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -227,11 +214,11 @@ var graphClass = {
 				}
 			  break;
 			  case "longueur":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.halstead.lngth*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -240,11 +227,11 @@ var graphClass = {
 				}
 			  break;
 			  case "functions":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.functions*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -254,11 +241,11 @@ var graphClass = {
 			  break;
 			  
 			  case "maintenabilite":
-				if(d.group == 2 && _.isUndefined(d.complexity) == false){
+				if(d.group == "js" && _.isUndefined(d.complexity) == false){
 		        	return 10+d.complexityNormalyzed.maintainability*multiplier;
 				}
 				else{
-					if(d.group == 1){
+					if(d.group == "html"){
 			    		return 15;
 			    	}
 			    	else{
@@ -267,7 +254,7 @@ var graphClass = {
 				}
 			  break;
 			  default: 
-			  	if(d.group == 1){
+			  	if(d.group == "html"){
 		    		return 20;
 		    	}
 		    	else{
@@ -351,7 +338,30 @@ var graphClass = {
 
 	},
 	createLegend: function(svg){
-		if(_.isUndefined(graphClass.graphData.info) == false){
+		if(_.isUndefined(graphClass.graphData.groups) == false){
+
+
+			/*
+	colorsList: d3.scale.ordinal().range(["#FF0000","#0000FF","#B2B2FF","#D9D9FF","#6699FF",
+   			    "#FF9900","#009933","#99D6AD","#E6F5EB","#66D966",
+   			    "#CCCC00","#CC00FF","#F2BFFF","#0099CC","#CCEBF5",
+   			    "#333","#fff","#000","#333","#333"]),*/
+
+			var colors = [];
+			var colorsList = [];
+			_.each(graphClass.graphData.groups, function (currentGroup,key) {
+				if(currentGroup.count > 0){
+					colors.push([currentGroup.label+ "["+currentGroup.count+"]",currentGroup.color]);
+					colorsList.push(currentGroup.color);
+				}
+	    	});
+
+			graphClass.colorsList = d3.scale.ordinal().range(colorsList);
+
+
+	    	console.log(colors);
+
+			/*
 			var colors = [  ["Html"+" ["+graphClass.graphData.info.groupCount[1]+"]", graphClass.colorsList(1)],
 							["JavaScript externe"+" ["+graphClass.graphData.info.groupCount[2]+"]", graphClass.colorsList(2)],
 							["JavaScript externe (hors serveur)"+" ["+graphClass.graphData.info.groupCount[11]+"]", graphClass.colorsList(11)],
@@ -367,9 +377,11 @@ var graphClass = {
 							["Ancres Html"+" ["+graphClass.graphData.info.groupCount[6]+"]", graphClass.colorsList(6)],
 							["Lien courriel"+" ["+graphClass.graphData.info.groupCount[7]+"]", graphClass.colorsList(7)],
 							["Php"+" ["+graphClass.graphData.info.groupCount[14]+"]", graphClass.colorsList(14)],
-							["Lien divers"+" ["+graphClass.graphData.info.groupCount[15]+"]", graphClass.colorsList(15)]
-						];
+							["Lien divers"+" ["+graphClass.graphData.info.groupCount[15]+"]", graphClass.colorsList(15)],
+							["HTML components"+" ["+graphClass.graphData.info.groupCount[16]+"]", graphClass.colorsList(16)]
 
+						];
+			*/
 
 
 
@@ -421,7 +433,7 @@ var graphClass = {
 		// Initialize force
     	var force = d3.layout.force()
     	.charge(function(d) {
-    		if(d.group == 1){
+    		if(d.group == "html"){
     			return -1200;
     		}
     		else{
@@ -612,14 +624,25 @@ var hullg = svg.selectAll("path");
 	    .attr("id", function(d){return "circle-node-"+ d.name})
 
 	    .attr("r", function(d){
-	    	if(d.group == 1 || d.group == 2){
-	    		return 17;
+	    	if(d.group == "html" || d.group == "js"){
+	    		return 25;
 	    	}
 	    	else{
-	    		return 12;
+	    		return 20;
 	    	}
 	    })
-	    .style("fill", function(d) { return graphClass.colorsList(d.group); })
+	    .style("fill", function(d) { 
+
+	    	/*_.each(notes, function(note) {
+			  note.asyncSave({success: renderNotes});
+			});*/
+	    	
+	    	//console.log(graphClass.graphData.groups);
+	    	//var group = _.where(graphClass.graphData.groups, {keyword: d.group});
+	    	//console.log(group);
+	    	//var mycolor = d3.scale.ordinal().range([group.color]);
+
+	    	return d.infoGroup.color; })
 	    .call(node_drag);
 
 
@@ -751,10 +774,10 @@ node.append('text')
 var groupsOne = [];
 var groupsTwo = [];
 gnode.each(function(n,i){    
- if(n.group == 1 || n.group == 3){
+ if(n.cluster == 2){
  	groupsOne.push([n.x,n.y]);
  }
-  if(n.group == 2){
+  if(n.cluster == 3){
  	groupsTwo.push([n.x,n.y]);
  }
 });
@@ -819,60 +842,34 @@ if (!hull.empty()) {
 			        dr = Math.sqrt(dx * dx + dy * dy),
 			        theta = Math.atan2(dy, dx) + Math.PI / 7.85,
 			        d90 = Math.PI / 2,
-			        dtxs = d.target.x - 10 * Math.cos(theta),
-			        dtys = d.target.y - 10 * Math.sin(theta);
+			        dtxs = d.target.x - 20 * Math.cos(theta),
+			        dtys = d.target.y - 20 * Math.sin(theta);
 			    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0 1," + d.target.x + "," + d.target.y + "A" + dr + "," + dr + " 0 0 0," + d.source.x + "," + d.source.y + "M" + dtxs + "," + dtys +  "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
 			  });
 
-	
 
-/*
-			  path.attr("x1", function(d) { return d.source.x; })
-				  .attr("y1", function(d) { return d.source.y; })
-				  .attr("x2", function(d) { return d.target.x; })
-				  .attr("y2", function(d) { return d.target.y; });
-*/
-			text.attr("dx", function(d) { return d.x+10; })
+			text.attr("dx", function(d) { return d.x+15; })
 			.attr("dy", function(d) { return d.y+1; });
 
 			icon.attr("dx", function(d) { return d.x; })
 			.attr("dy", function(d) { return d.y; });
 
-/*
-			icon.attr("x", function(d) { return d.x; })
-			.attr("y", function(d) { return d.y; });
-*/
 
-			/*
-			node.forEach(function(o, i) {
-			    o.y += (foci[o.id].y - o.y) * k;
-			    o.x += (foci[o.id].x - o.x) * k;
-			});*/
-
-
-//.selectAll("circle.node")
 
 			graphClass.fociCount = graphClass.fociCount + 1;
 
+
+			
 			if(graphClass.fociCount < 50){
-				gnode.each(function(o,i){    
-		    		o.y += (foci[o.group].y - o.y) * graphClass.foci;
-				    o.x += (foci[o.group].x - o.x) * graphClass.foci;
+				gnode.each(function(o,i){ 
+					console.log(o);   
+		    		o.y += (foci[o.infoGroup.foci].y - o.y) * graphClass.foci;
+				    o.x += (foci[o.infoGroup.foci].x - o.x) * graphClass.foci;
 		    	});
 			}
+			
 
-
-		/*	var q = d3.geom.quadtree(gnode),
-			i = 0,
-			n = gnode.length;*/
-
-
-			//while (++i < n) q.visit(collide(gnode[i]));
-                 
-
-
-  			//while (++i < n) q.visit(collide(gnode[i]));
-  			gnode.each(collideDetect(0.5));
+	
 
 			node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 		}
@@ -1204,7 +1201,7 @@ var hull = hullg.selectAll("path.hull")
 
 		    var text = gnode.append("text")
 		    .attr('font-family', 'sans-serif')
-		    .attr('font-size','11px')
+		    .attr('font-size','13px')
 		    .style('text-shadow','0 2px 0 #fff, 2px 0 0 #fff, 0 -2px 0 #fff, -2px 0 0 #fff')
 		    .text(function(d) {
 		    	return d.name;
@@ -1212,9 +1209,8 @@ var hull = hullg.selectAll("path.hull")
 
 
 
-            /*    text-shadow: 0 2px 0 #fff, 2px 0 0 #fff, 0 -2px 0 #fff, -2px 0 0 #fff;*/
 
-
+/*
 			var icon = gnode.append('text')
 		    .attr('text-anchor', 'middle')
 		    .attr('dominant-baseline', 'central')
@@ -1251,19 +1247,88 @@ var hull = hullg.selectAll("path.hull")
 				}
 				return code;
 
+			}); */
+
+			var icon = gnode.append('text')
+		    .attr('text-anchor', 'middle')
+		    .attr('dominant-baseline', 'central')
+		    .attr('font-family', 'Oswald')
+		    .attr('font-weight', '7px')
+		    .style('fill', '#ffffff')
+		    //.attr('font-weight','bold')
+		   // .style("text-shadow", '1px 1px #fff')
+		    		    //.style("fill-opacity", 0.8)
+
+			.text(function(d) { 
+				var code = "";
+				switch(d.group){
+					case 1:
+						code =  'HTML';
+					break;
+					case 2:
+						code = 'JS';
+					break;
+					case 3:
+						code = 'CSS';
+					break;
+					case 5:
+					 	code = 'LINK';
+					break;
+					case 6:
+						code = '#';
+					break;
+					case 7:
+						code = '@';
+					break;
+					case 8:
+						code = 'CSS';
+					break;
+					case 10:
+					case 11:
+						code = 'JS';
+					break
+					case 12:
+					case 13:
+						code = 'CSS';
+					break
+					case 14:
+						code = 'PHP';
+					break
+					/*case 15:
+						code = '\uf08e';
+					break;*/
+				}
+				return d.infoGroup.text;
+
 			}); 
 
 
 	var topLeft = {x: 150, y: 150};
+
 	var topRight = {x: 150, y: 850};
 	var bottomLeft = {x: 850, y: 150};
 	var bottomRight = {x: 850, y: 850};
 
+
+	var foci = {	topLeft:{x: 150, y: 150},
+				 	topCenter:{x: 150, y: 425},
+				 	topRight: {x: 150, y: 850},
+				 	centerLeft: {x: 425, y: 150},
+				 	center: {x: 425, y: 425},
+				 	centerRight: {x: 425, y: 850},
+				 	bottomLeft: {x: 850, y: 150},
+				 	bottomCenter: {x: 850, y: 425},
+				 	bottomRight: {x: 850, y: 850}
+				};
+
+
+
+/*
     var foci = [topLeft,topLeft, topRight, bottomLeft, topRight, bottomRight,
     			bottomRight,bottomRight,bottomLeft,bottomRight,topRight,
     			topRight,bottomLeft,bottomLeft,bottomRight,bottomRight,
     			bottomRight,bottomRight,bottomRight,bottomRight];
-
+*/
 
 
 /*	
