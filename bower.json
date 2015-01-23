@@ -25,7 +25,8 @@
     "metisMenu": "~1.1.2",
     "fontawesome": "~4.2.0",
     "iviewer": "~0.7.11",
-    "hammer.js": "~2.0.4"
+    "hammer.js": "~2.0.4",
+    "nedb": "*"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",

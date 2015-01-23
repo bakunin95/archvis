@@ -3,1201 +3,645 @@
 
 jQuery(function($) {
 
+	$('#content').delegate( ".filter", "click", function() {
+		graphClass.changeFilter($(this).val());
+	});
+
+
+	var graphClass = {
+		force: d3.layout.force(),
+		width: $("#mainLayout").layout().panes.center.innerWidth()-30,
+		height: $("#mainLayout").layout().panes.center.innerHeight()-50,  
+		pause: false,
+		chargeDistance: -1000,
+		foci: 0.002,
+		fociGroup:{	topLeft:{x: 150, y: 150},
+				 	topCenter:{x: 150, y: 425},
+				 	topRight: {x: 150, y: 850},
+				 	centerLeft: {x: 425, y: 150},
+				 	center: {x: 425, y: 425},
+				 	centerRight: {x: 425, y: 850},
+				 	bottomLeft: {x: 850, y: 150},
+				 	bottomCenter: {x: 850, y: 425},
+				 	bottomRight: {x: 850, y: 850}
+		},
+		fociCount: 50,
+		zoomFactor:1,
+		zoom: d3.behavior.zoom,
+		liensDetails: false,
+		pathColor: "#666666",
+		translateFactor: [0,0],
+	    getGraphData: function(){
+	    	return JSON.stringify(graphClass.graphData);
+	    },
+	    onDoubleClickNode: function(selectedNode,allNodes){
+	    	/*_.each(allNodes, function (currentNode) {
+	    		d3.select(currentNode[0]).style('stroke-dasharray',null).style('stroke','black').style('stroke-width','1');
+	    	});
+	    	selectedNode.style('stroke-dasharray',("10,3")).style('stroke','red').style('stroke-width','10');
+
+	    	var filePath = selectedNode[0][0]["__data__"].name.substring(2);*/
+		},
+		onMouseOverNode:function(d,path,node){
 
 
 
 
-$('#content').delegate( ".filter", "click", function() {
-	console.log($(this).val());
-	graphClass.changeFilter($(this).val());
-});
+			if(graphClass.liensDetails == true){
+				path.style('stroke', function(l) {
+					if (d === l.source || d === l.target){
+						return "red";
+					}
+					else{
+						return graphClass.pathColor;
+					}
+				});
+				path.style("opacity", function(l) {
+				 	if (d === l.source || d === l.target){
+					return 1;
+					}
+					else{
+						return 0;
+					}
+				});
+			}
+		},
+		addNode: function(node){
+			var foundId =graphClass.newRelations.nodes.indexOf(node);
+			if(foundId !== -1){
+				return foundId;
+			}
+			var id =graphClass.newRelations.nodes.length;
+			graphClass.newRelations.nodes.push(node);
+			return id;
+		},
+		
+		regenGraph: function(assets){
+			//créer un nouveau array d'asset
+			
+			
+			$.ajax({
+				type: 'GET',
+				contentType: 'application/json',
+				url: 'data/graphe.json',	
+				success: function(data) {
+				
+					graphClass.newRelations = new Array();
+					graphClass.newRelations.nodes = new Array();
+					graphClass.newRelations.links = new Array();
 
-console.log(d3.scale.category20());
-var graphClass = {
-	force: d3.layout.force(),
-	width: $("#mainLayout").layout().panes.center.innerWidth()-30,
-	height: $("#mainLayout").layout().panes.center.innerHeight()-50,  
-	pause: false,
-	foci: 0.002,
-	fociCount: 50,
-	zoomFactor:1,
-	zoom: d3.behavior.zoom,
-	liensDetails: false,
-	pathColor: "#666666",
-	translateFactor: [0,0],
-   // colorsList: d3.scale.category20(),
-   	colorsList: d3.scale.ordinal().range(["#FF0000","#0000FF","#B2B2FF","#D9D9FF","#6699FF",
-   			    "#FF9900","#009933","#99D6AD","#E6F5EB","#66D966",
-   			    "#CCCC00","#CC00FF","#F2BFFF","#0099CC","#CCEBF5",
-   			    "#333","#fff","#000","#333","#333"]),
-    getGraphData: function(){
-    	return JSON.stringify(graphClass.graphData);
-    },
-    onDoubleClickNode: function(selectedNode,allNodes){
-    	_.each(allNodes, function (currentNode) {
-    		d3.select(currentNode[0]).style('stroke-dasharray',null).style('stroke','black').style('stroke-width','1');
-    	});
-    	selectedNode.style('stroke-dasharray',("10,3")).style('stroke','red').style('stroke-width','10');
 
-    	var filePath = selectedNode[0][0]["__data__"].name.substring(2);
+			        async.map(data.nodes, function(node,cbnode){	
+						var key = data.nodes.indexOf(node);
+
+			        	if(_.contains(assets, node.name)){
+			        		//copier les assets demandé
+			        		var newKey = graphClass.addNode(node);
+
+			        		//find or add
+			        		async.map(data.links, function(link,cblink){
+			        		
+				        		if(link.source == key){
+				        			var targetKey = graphClass.addNode(data.nodes[link.target]);
+				        			graphClass.newRelations.links.push({source:newKey,target:targetKey,value:1});
+				        		}
+				        		if(link.target == key){
+				        			var sourceKey = graphClass.addNode(data.nodes[link.source]);
+				        			graphClass.newRelations.links.push({source:sourceKey,target:newKey,value:1});
+				        		}
+
+				        		
+							cblink();
+				        	},function(err,result){
+					    		cbnode();
+				    		});	
+
+
+			        	}
+			        	else{
+			        		cbnode();
+			        	}
+						
+			    											    		
+			    	},function(err,result){
+			    		graphClass.drawGraph(graphClass.newRelations);
+			    	});	    
+
+				}
+			});
+		},
+		filterNoRelations: function(){
+
+			var links = graphClass.graphData.links;
+			var nodes = graphClass.graphData.nodes;
+			var groups = graphClass.graphData.groups;
+
+			var Relatedids = _.pluck(_.union(_.uniq(_.pluck(links,"source")),_.uniq(_.pluck(links,"target"))),"id");	
+			async.filter(nodes,function(node,cbFilter){
+				cbFilter(_.contains(Relatedids,node.id));
+			}, 
+			function(newNodes){
+				var newData = {"nodes":newNodes,"links":links,"groups":groups};
+				graphClass.newDataBackup = newData;
+		    	graphClass.drawGraph(newData);
+			});		
+
+		},
+		filter: function(filter){
+			var dbNodes = new Nedb();
+			var dbLinks = new Nedb();
+			
+			d3.json("data/graphe.json", function(error, data) {
+
+
+				dbNodes.insert(data.nodes);
+				dbLinks.insert(data.links);
+				 				
+				dbNodes.find({group: { $in: filter}},{"data":0}).sort({ "id": 1 }).exec(function (err, nodes) {
+
+					var ids = _.uniq(_.pluck(nodes,"id"));					
+				    dbLinks.find({source: { $in: ids},target: { $in: ids}}, function (err, links) {
+				    	async.each(nodes, function(node,cbnode){
+				    		var newKey = nodes.indexOf(node);
+				    		console.log(newKey);
+				    		async.map(links, function(link,cblink){
+				    			if(link.source == node.id){
+				        			link.source = newKey;
+				        		}
+				        		if(link.target == node.id){
+				        			link.target = newKey;
+				        		}
+				        		cblink(link);
+				    		});
+				    		cbnode();
+				    	},function(err,res){
+						var newData = {"nodes":nodes,"links":links,"groups":data.groups};
+						graphClass.newDataBackup = newData;
+				    	graphClass.drawGraph(newData);
+				    	});
+				    });
+				});
+			});
+			
+		},
+		generateGraph: function (name){
+
+			// Create Graph
+			d3.json("data/graphe.json", function(error, data) {
+				graphClass.graphDataBackup = data;
+				graphClass.drawGraph(data);
+
+				$.each(graphClass.graphData.groups, function (i, item) {
+				    $('#groupFilter').append($('<option>', { 
+				        value: item.keyword,
+				        text : item.label,
+				        selected : "selected"
+				    }));
+			    });
+				
+				graphClass.filterGroups = $('#groupFilter').val();
+
+
+			});
+
+		},
+		createLegend: function(svg){
+
+
+
+
+			if(_.isUndefined(graphClass.graphData.groups) == false){
+
+				$('#buttonFilter').click(function(){
+					graphClass.filter($('#groupFilter').val());
+				});
+
+				$('#buttonFilterNoRel').click(function(){
+					graphClass.filterNoRelations();
+				});
+
 				
 
-	},
-	onMouseOverNode:function(d,path,node){
+				var colors = [];
+				var colorsList = [];
+				_.each(graphClass.graphData.groups, function (currentGroup,key) {
+					if(currentGroup.count > 0){
+						colors.push([currentGroup.label+ "["+currentGroup.count+"]",currentGroup.color]);
+						colorsList.push(currentGroup.color);
+					}
+		    	});
+				graphClass.colorsList = d3.scale.ordinal().range(colorsList);
 
 
+				var legend = svg.append("svg:g")
+				.attr("class", "legend")
+				.attr("height", 100)
+				.attr("width", 100)
+				.attr('transform', 'translate(-20,30)');
 
+				var legendRect = legend.selectAll('rect').data(colors);
+				var w =100;
+				legendRect.enter()
+				    .append("rect")
+				    .attr("x", w - 65)
+				    .attr("width", 10)
+				    .attr("height", 10);
 
-		if(graphClass.liensDetails == true){
-			path.style('stroke', function(l) {
-				if (d === l.source || d === l.target){
-					return "red";
-				}
-				else{
-					return graphClass.pathColor;
-				}
-			});
-			path.style("opacity", function(l) {
-			 	if (d === l.source || d === l.target){
-				return 1;
-				}
-				else{
-					return 0;
-				}
-			});
-		}
-	},
-	addNode: function(node){
-		var foundId =graphClass.newRelations.nodes.indexOf(node);
-		if(foundId !== -1){
-			return foundId;
-		}
-		var id =graphClass.newRelations.nodes.length;
-		graphClass.newRelations.nodes.push(node);
-		return id;
-	},
-	changeFilter: function(filter){
+				legendRect
+				    .attr("y", function(d, i) {
+				        return i * 20;
+				    })
+				    .style("fill", function(d) {
+				        return d[1];
+				    });
 
-		graphClass.svg.selectAll('circle.node').transition().duration(1000).attr('r', function(d) {
+				var legendText = legend.selectAll('text').data(colors);
 
-			var multiplier = 60;
+				legendText.enter()
+				    .append("text")
+				    .attr("x", w - 52);
 
-			switch (filter){
-			  case "lint": 
-			  	if(_.isUndefined(d.complexityNormalyzed.reportCount) == false){
-			    	return 10+d.complexityNormalyzed.reportCount*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			  case "cyclomatic":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.aggregate.cyclomaticDensity*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			  case "vocabulaire":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.aggregate.halstead.vocabulary*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			  case "volume":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.aggregate.halstead.volume*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			  case "effort":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.aggregate.halstead.effort*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			   case "difficulte":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.aggregate.halstead.difficulty*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			   case "bogues":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.aggregate.halstead.bugs*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			   case "temps":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.aggregate.halstead.time*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			   case "operators":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.aggregate.halstead.operators.distinct*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			   case "operands":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.aggregate.halstead.operands.distinct*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			  case "longueur":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.halstead.lngth*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			  case "functions":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.functions*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			  
-			  case "maintenabilite":
-				if(d.group == "js" && _.isUndefined(d.complexity) == false){
-		        	return 10+d.complexityNormalyzed.maintainability*multiplier;
-				}
-				else{
-					if(d.group == "html"){
-			    		return 15;
-			    	}
-			    	else{
-			    		return 10;
-			    	}
-				}
-			  break;
-			  default: 
-			  	if(d.group == "html"){
-		    		return 20;
-		    	}
-		    	else{
-		    		return 15;
-		    	}
-			}		
-			tick();
+				legendText
+				    .attr("y", function(d, i) {
+				        return i * 20 + 9;
+				    })
+				    .text(function(d) {
+				        return d[0];
+				    });
 
-			
-	    })
-	},
-	regenGraph: function(assets){
-		//créer un nouveau array d'asset
-		
-		
-		$.ajax({
-			type: 'GET',
-			contentType: 'application/json',
-			url: 'data/graphe.json',	
-			success: function(data) {
-			
-				graphClass.newRelations = new Array();
-				graphClass.newRelations.nodes = new Array();
-				graphClass.newRelations.links = new Array();
-
-
-		        async.map(data.nodes, function(node,cbnode){	
-					var key = data.nodes.indexOf(node);
-
-		        	if(_.contains(assets, node.name)){
-		        		//copier les assets demandé
-		        		var newKey = graphClass.addNode(node);
-
-		        		//find or add
-		        		async.map(data.links, function(link,cblink){
-		        		
-			        		if(link.source == key){
-			        			var targetKey = graphClass.addNode(data.nodes[link.target]);
-			        			graphClass.newRelations.links.push({source:newKey,target:targetKey,value:1});
-			        		}
-			        		if(link.target == key){
-			        			var sourceKey = graphClass.addNode(data.nodes[link.source]);
-			        			graphClass.newRelations.links.push({source:sourceKey,target:newKey,value:1});
-			        		}
-
-			        		
-						cblink();
-			        	},function(err,result){
-				    		console.log("donelink");
-				    		cbnode();
-			    		});	
-
-
-		        	}
-		        	else{
-		        		cbnode();
-		        	}
-					
-		    											    		
-		    	},function(err,result){
-		    		console.log("done");
-		    		console.log(graphClass.newRelations);
-
-
-		    		graphClass.drawGraph(graphClass.newRelations);
-		    	});	    
-
+				    graphClass.legend = legend;
 			}
-		});
-	},
-	generateGraph: function (name){
-
-		console.log("test");
-		// Create Graph
-		d3.json("data/graphe.json", function(error, data) {
-			graphClass.drawGraph(data);
-		});
-
-	},
-	initializeForce: function(){
-
-	},
-	createLegend: function(svg){
-		if(_.isUndefined(graphClass.graphData.groups) == false){
-
-
-			/*
-	colorsList: d3.scale.ordinal().range(["#FF0000","#0000FF","#B2B2FF","#D9D9FF","#6699FF",
-   			    "#FF9900","#009933","#99D6AD","#E6F5EB","#66D966",
-   			    "#CCCC00","#CC00FF","#F2BFFF","#0099CC","#CCEBF5",
-   			    "#333","#fff","#000","#333","#333"]),*/
-
-			var colors = [];
-			var colorsList = [];
-			_.each(graphClass.graphData.groups, function (currentGroup,key) {
-				if(currentGroup.count > 0){
-					colors.push([currentGroup.label+ "["+currentGroup.count+"]",currentGroup.color]);
-					colorsList.push(currentGroup.color);
-				}
-	    	});
-
-			graphClass.colorsList = d3.scale.ordinal().range(colorsList);
-
-
-	    	console.log(colors);
-
-			/*
-			var colors = [  ["Html"+" ["+graphClass.graphData.info.groupCount[1]+"]", graphClass.colorsList(1)],
-							["JavaScript externe"+" ["+graphClass.graphData.info.groupCount[2]+"]", graphClass.colorsList(2)],
-							["JavaScript externe (hors serveur)"+" ["+graphClass.graphData.info.groupCount[11]+"]", graphClass.colorsList(11)],
-							["JavaScript interne"+" ["+graphClass.graphData.info.groupCount[4]+"]", graphClass.colorsList(4)],
-							["JavaScript externe (liens mort)"+" ["+graphClass.graphData.info.groupCount[10]+"]", graphClass.colorsList(10)],
-							["Requête ajax"+" ["+graphClass.graphData.info.groupCount[9]+"]", graphClass.colorsList(9)],
-							["Css externe"+" ["+graphClass.graphData.info.groupCount[3]+"]", graphClass.colorsList(3)],
-							["Css externe (hors serveurs)"+" ["+graphClass.graphData.info.groupCount[13]+"]", graphClass.colorsList(13)],
-							["Css interne"+" ["+graphClass.graphData.info.groupCount[8]+"]", graphClass.colorsList(8)],
-							["Css externe (liens mort)"+" ["+graphClass.graphData.info.groupCount[12]+"]", graphClass.colorsList(12)],
-
-							["Lien externe"+" ["+graphClass.graphData.info.groupCount[5]+"]", graphClass.colorsList(5)],
-							["Ancres Html"+" ["+graphClass.graphData.info.groupCount[6]+"]", graphClass.colorsList(6)],
-							["Lien courriel"+" ["+graphClass.graphData.info.groupCount[7]+"]", graphClass.colorsList(7)],
-							["Php"+" ["+graphClass.graphData.info.groupCount[14]+"]", graphClass.colorsList(14)],
-							["Lien divers"+" ["+graphClass.graphData.info.groupCount[15]+"]", graphClass.colorsList(15)],
-							["HTML components"+" ["+graphClass.graphData.info.groupCount[16]+"]", graphClass.colorsList(16)]
-
-						];
-			*/
-
-
-
-
-
-			var legend = svg.append("svg:g")
-			.attr("class", "legend")
-			.attr("height", 100)
-			.attr("width", 100)
-			.attr('transform', 'translate(-20,30)');
-
-			var legendRect = legend.selectAll('rect').data(colors);
-			var w =100;
-			legendRect.enter()
-			    .append("rect")
-			    .attr("x", w - 65)
-			    .attr("width", 10)
-			    .attr("height", 10);
-
-			legendRect
-			    .attr("y", function(d, i) {
-			        return i * 20;
-			    })
-			    .style("fill", function(d) {
-			        return d[1];
-			    });
-
-			var legendText = legend.selectAll('text').data(colors);
-
-			legendText.enter()
-			    .append("text")
-			    .attr("x", w - 52);
-
-			legendText
-			    .attr("y", function(d, i) {
-			        return i * 20 + 9;
-			    })
-			    .text(function(d) {
-			        return d[0];
-			    });
-
-			    graphClass.legend = legend;
-		}
-	},
-	drawGraph: function(data){
-
-//force charge -1050
-	
-		// Initialize force
-    	var force = d3.layout.force()
-    	.charge(function(d) {
-    		if(d.group == "html"){
-    			return -1200;
-    		}
-    		else{
-    			return -1000;
-    		}
-    		//console.log("charge",d);
-    		
-    	})
-		//.charge(-1050)
-    	.linkDistance(function(d) {
-
-    		if(d.source.group == 1 && d.target.group == 1){
-    			return 175;
-    		}
-    		else{
-    			return 150;
-    		}
-    		
-    	})
-    	.friction(0.9)
-    	.gravity(0.1)
-
-
-    	.size([graphClass.width, graphClass.height]);
-    	
-    	d3.select("#d3Placeholder").html("");
-
-    	var svg = d3.select("#d3Placeholder").append("svg")
-    	.attr("width", graphClass.width)
-    	.attr("height", graphClass.height);
-
-
-		// cloner si on veux avoir data avant qu'il change.
-		graphClass.graphData = data;
-		force
-		//.gravity(0.05)
-		.nodes(data.nodes)
-		.links(data.links)
-		//.linkStrength(0.01)
-		.chargeDistance(-1000)
-		.start();
-		graphClass.data = data;
-
-		// add the links and the arrows
-		//var path = svg.append("svg:g").selectAll("path")
-				//var path = svg.append("svg:g").selectAll("path")
-
-
-
-//LINK CODE
-/*		
-
-		var path = svg.selectAll("line.link")
-       .data(data.links)
-     .enter().append("svg:line")
-       .attr("class", "link")
-       .style("stroke-width", function(d) { return Math.sqrt(d.value); })
-       .attr("x1", function(d) { return d.source.x; })
-       .attr("y1", function(d) { return d.source.y; })
-       .attr("x2", function(d) { return d.target.x; })
-       .attr("y2", function(d) { return d.target.y; });	
-
-
-*/
-//PATH CODE
-
-var hullg = svg.selectAll("path");
-
-
-		var path = svg.append("svg:g").selectAll("path")
-		.data(force.links())
-		.enter().append("svg:path")
-		// .attr("class", function(d) { return "link " + d.type; })
-		.attr("class", "link")
-		.attr("marker-mid", "url(#end)");
-
-
-
-
-
-
-
-		var hulls = svg.selectAll(".hull");
-
-
-
-
-
-
-
-		var node_drag = d3.behavior.drag()
-		.on("dragstart", dragstart)
-		.on("drag", dragmove)
-		.on("dragend", dragend);
-
-		function dragstart(d, i) {
-	        force.stop() // stops the force auto positioning before you start dragging
-	    }
-
-	    function dragmove(d, i) {
-	    	d.px += d3.event.dx;
-	    	d.py += d3.event.dy;
-	    	d.x += d3.event.dx;
-	    	d.y += d3.event.dy; 
-	        tick(); // this is the key to make it work together with updating both px,py,x,y on d !
-	    }
-
-	    function dragend(d, i) {
-	        d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
-	        tick();
-	        force.resume();
-
-	        if(graphClass.pause == true){
-				//setTimeout(function(){force.stop()},1000);
-				force.stop();
+		},
+		graphCharge: function(d){
+			
+			if(d.group == "html"){
+				return -1400;
 			}
+			else{
+				return -1200;
+			}  
+		},
+		graphLinkDistance: function(d){
 
-	    }
-
-
-	    function convexHulls(nodes, index, offset) {
-
-
-
-
-		  var hulls = {};
-
-
-		  gnode.each(function(n,i){    
-		    		 console.log("n",n);
-		        console.log("nx",n.x);
-
-		    var i = index(n),
-		    l = hulls[i] || (hulls[i] = []);
-
-
-		       
-
-
-		    l.push([n.x-offset, n.y-offset]);
-		    l.push([n.x-offset, n.y+offset]);
-		    l.push([n.x+offset, n.y-offset]);
-		    l.push([n.x+offset, n.y+offset]);
-		  });
-
-
-
-		  // create point sets
-		  for (var k=0; k<nodes.length; ++k) {
-		    var n = nodes[k];
-		    if (n.size) continue;
-		    var i = index(n),
-		        l = hulls[i] || (hulls[i] = []);
-
-
-		       
-
-
-		    l.push([n.x-offset, n.y-offset]);
-		    l.push([n.x-offset, n.y+offset]);
-		    l.push([n.x+offset, n.y-offset]);
-		    l.push([n.x+offset, n.y+offset]);
-		  }
-
-		  // create convex hulls
-		  var hullset = [];
-		  for (i in hulls) {
-		    hullset.push({group: i, path: d3.geom.hull(hulls[i])});
-		  }
-
-		  return hullset;
-		}
-
-		function getGroup(n) { return n.group; }
-
-
-
-   		graphClass.createLegend(svg);
-
-	    // Créer les noeuds, textes et liens
-	    var gnode = svg.selectAll('g.gnode')
-	    .data(data.nodes)
-	    .enter()
-	    .append('g');
-
-	    var node = gnode.append("circle")
-	    .attr("class", "node")
-	    .attr("id", function(d){return "circle-node-"+ d.name})
-
-	    .attr("r", function(d){
-	    	if(d.group == "html" || d.group == "js"){
+			if(d.source.group == "html" && d.target.group == "html"){
+				return 175;
+			}
+			else{
+				return 150;
+			}
+		},
+		graphNodeSize: function(d){
+			if(d.group == "html" || d.group == "js"){
 	    		return 25;
 	    	}
 	    	else{
 	    		return 20;
 	    	}
-	    })
-	    .style("fill", function(d) { 
-
-	    	/*_.each(notes, function(note) {
-			  note.asyncSave({success: renderNotes});
-			});*/
-	    	
-	    	//console.log(graphClass.graphData.groups);
-	    	//var group = _.where(graphClass.graphData.groups, {keyword: d.group});
-	    	//console.log(group);
-	    	//var mycolor = d3.scale.ordinal().range([group.color]);
-
-	    	return d.infoGroup.color; })
-	    .call(node_drag);
-
-
-
-
-//var nodes = d3.range(100).map(Object);
- 
-//var groups = d3.nest().key(function(d) { return d & 3; }).entries(nodes);
-
-
-
-//var groups = d3.range(15).map(Object);
-/*
-gnode.each(function(n,i){    
-	console.log(n);
-	console.log(i);
-
-n.group
-
-
-});*/
-
-
-
-//var groups = d3.range(2).map(Object);
-
-//var groups = [{0:[1,2,3,4,5,6,7,8,9,10]},{1:[11,12,13,14,15,16,17,18,19,20]}];
-
-
-
-
-
-/*
-var groups = [{0:[1,2,3,4,5]}];
-
-var groupPath = function(d) {
-	//console.log("thisisD",d.values.map);
-    return "M" + 
-      d3.geom.hull()
-        .join("L")
-    + "Z";
-};
-
-var groupFill = function(d, i) { 
-
-
-	return graphClass.colorsList(d.group); };
-
-
-
-*/
-
-
-		
-
-
-
-/*
-
-node.append('text')
-  //  .attr('font-family', 'FontAwesome')
-    .attr('font-color', 'black')
-    //.attr('font-size', function(d) { return d.size+'em'} )
-    .text(function(d) { return 'T' }); 
- //   .text(function(d) { return '\uf118' }); 
-*/
-
-
-
-
-
-
-	    /*gnode.selectAll("circle.node").on("dblclick", function(){    
-	    	graphClass.onDoubleClickNode(d3.select(this),gnode.selectAll("circle.node"));
-	    });*/
-
-	    graphClass.svg = svg;
-
-	    node.on('mouseover', function(d) {
-	    	graphClass.onMouseOverNode(d,path,node);
-	    	svg.on("mousedown.zoom", null);
-	    	svg.on("mousemove.zoom", null);
-
-	    });
-
-		
-
-	   // node.style.css( 'cursor', 'pointer' );
-
-
-		gnode.style('cursor', function(l) {
-			return 'move';
-		});
-
-
-
-	    gnode.on("mouseout", function(d) {
-    		path.style("stroke", function(l) {
-			 	return graphClass.pathColor;
-			});
-	        path.style("opacity", function(l) {
-			 	return 1;
-			});
-		});
-
-		path.style('stroke', function(l) {
-			return graphClass.pathColor;
-		});
-
-
-		var tickCount = 0;
-		function tick(e) {
-
-
-
-
-/*
-			svg.selectAll("path")
-		    .data(groups)
-		      .attr("d", groupPath)
-		    .enter().insert("path", "circle")
-		      .style("fill", groupFill)
-		      .style("stroke", groupFill)
-		      .style("stroke-width", 40)
-		      .style("stroke-linejoin", "round")
-		      .style("opacity", .2)
-		      .attr("d", groupPath);*/
-
-var groupsOne = [];
-var groupsTwo = [];
-gnode.each(function(n,i){    
- if(n.cluster == 2){
- 	groupsOne.push([n.x,n.y]);
- }
-  if(n.cluster == 3){
- 	groupsTwo.push([n.x,n.y]);
- }
-});
-
-
-
-var groupPathOne = "M" +d3.geom.hull(groupsOne).join("L")
-    + "Z";
-var groupPathTwo = "M" +d3.geom.hull(groupsTwo).join("L")
-    + "Z";
-
-
-svg.selectAll(".hull").remove();
-
-var hullRed = svg.insert("path", "g")
-        .style("fill", "#F5A9BC")
-        .style("stroke", "#F5A9BC")
-        .style("stroke-width", 40)
-        .style("stroke-linejoin", "round")
-        .style("opacity", .2)
-        .attr("d", groupPathOne)
-        .attr("class","hull");
-
-
-var hullBlue = svg.insert("path", "g")
-        .style("fill", "#A9D0F5")
-        .style("stroke", "#A9D0F5")
-        .style("stroke-width", 40)
-        .style("stroke-linejoin", "round")
-        .style("opacity", .2)
-        .attr("d", groupPathTwo)
-        .attr("class","hull");
-
-
-			hullRed.attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
-			hullBlue.attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
-
-			
-/*
-if (!hull.empty()) {
-      hull.data(convexHulls(gnode, getGroup, off))
-          .attr("d", drawCluster);
-    }
- */
-
-		 /* path.attr("d", function(d) {
-			    var dx = d.target.x - d.source.x,
-			        dy = d.target.y - d.source.y,
-			        dr = Math.sqrt(dx * dx + dy * dy),
-			        theta = Math.atan2(dy, dx) + Math.PI / 7.85,
-			        d90 = Math.PI / 2,
-
-
-			        dtxs = d.target.x - 10  * Math.cos(theta),
-			        dtys = d.target.y - 10 * Math.sin(theta);
-			    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0 1," + d.target.x + "," + d.target.y + "A" + dr + "," + dr + " 0 0 0," + d.source.x + "," + d.source.y + "M" + dtxs + "," + dtys +  "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
-			  });*/
-			
-			 path.attr("d", function(d) {
-			    var dx = d.target.x - d.source.x,
-			        dy = d.target.y - d.source.y,
-			        dr = Math.sqrt(dx * dx + dy * dy),
-			        theta = Math.atan2(dy, dx) + Math.PI / 7.85,
-			        d90 = Math.PI / 2,
-			        dtxs = d.target.x - 20 * Math.cos(theta),
-			        dtys = d.target.y - 20 * Math.sin(theta);
-			    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0 1," + d.target.x + "," + d.target.y + "A" + dr + "," + dr + " 0 0 0," + d.source.x + "," + d.source.y + "M" + dtxs + "," + dtys +  "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
-			  });
-
-
-			text.attr("dx", function(d) { return d.x+15; })
-			.attr("dy", function(d) { return d.y+1; });
-
-			icon.attr("dx", function(d) { return d.x; })
-			.attr("dy", function(d) { return d.y; });
-
-
-
-			graphClass.fociCount = graphClass.fociCount + 1;
+		},
+		graphNodeFill: function(d) { 
+		    return d.infoGroup.color; 
+		},
+		drawGraph: function(data){
+
+			// Clean content
+			d3.select("#d3Placeholder").html("");
+
+			// Initialize force
+	    	var force = d3.layout.force()
+	    	.charge(graphClass.graphCharge)
+	    	.linkDistance(graphClass.graphLinkDistance)
+	    	.friction(0.9)
+	    	.gravity(0.05)
+	    	.size([graphClass.width, graphClass.height]);   	
+
+	    	var svg = d3.select("#d3Placeholder").append("svg")
+	    	.attr("width", graphClass.width)
+	    	.attr("height", graphClass.height);
+
+			// cloner si on veux avoir data avant qu'il change.
+			graphClass.graphData = data;
 
 
 			
-			if(graphClass.fociCount < 50){
-				gnode.each(function(o,i){ 
-					console.log(o);   
-		    		o.y += (foci[o.infoGroup.foci].y - o.y) * graphClass.foci;
-				    o.x += (foci[o.infoGroup.foci].x - o.x) * graphClass.foci;
-		    	});
-			}
-			
-
-	
-
-			node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-		}
+			force
+			.nodes(data.nodes)
+			.links(data.links)
+			.chargeDistance(graphClass.chargeDistance)
+			.start();
+			graphClass.data = data;
 
 
-var padding = 5, // separation between circles
-    radius=20;
+			var hullg = svg.selectAll("path");
 
-		function collideDetect(alpha) {
-		  var quadtree = d3.geom.quadtree(gnode);
-		  return function(d) {
-		    var rb = 2*radius + padding,
-		        nx1 = d.x - rb,
-		        nx2 = d.x + rb,
-		        ny1 = d.y - rb,
-		        ny2 = d.y + rb;
-		    
-		    quadtree.visit(function(quad, x1, y1, x2, y2) {
-		      if (quad.point && (quad.point !== d)) {
-		        var x = d.x - quad.point.x,
-		            y = d.y - quad.point.y,
-		            l = Math.sqrt(x * x + y * y);
-		          if (l < rb) {
-		          l = (l - rb) / l * alpha;
-		          d.x -= x *= l;
-		          d.y -= y *= l;
-		          quad.point.x += x;
-		          quad.point.y += y;
-		        }
-		      }
-		      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-		    });
-		  };
-		}
+			var path = svg.append("svg:g").selectAll("path")
+			.data(force.links())
+			.enter().append("svg:path")
+			.attr("class", "link")
+			.attr("marker-mid", "url(#end)");
 
+			var node_drag = d3.behavior.drag()
+			.on("dragstart", dragstart)
+			.on("drag", dragmove)
+			.on("dragend", dragend);
 
-
-
-	/*	function tickold() {
-		    gnode.each(gravityFunction) 
-		       //adjust each node according to the custom force
-		        .attr("cx", function (d) {
-		            return d.x;
-		        })
-		        .attr("cy", function (d) {
-		            return d.y;
-		        });
-		    
-		    path.attr("x1", function (d) {
-		            return d.source.x;
-		        })
-		        .attr("y1", function (d) {
-		            return d.source.y;
-		        })
-		        .attr("x2", function (d) {
-		            return d.target.x;
-		        })
-		        .attr("y2", function (d) {
-		            return d.target.y;
-		        });
-
-		}*/
-
-		function moveHandler(coord){
-
-			svg.selectAll(".hull").transition().attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
-			gnode.transition().attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
-			path.transition().attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
-
-
-			graphClass.translateFactor = coord;
-			d3.event.translate = coord;
-			svg.on("dblclick.zoom", null);
-		}
-
-
-	    function zoomHandler(){
-	    	//console.log("translated",graphClass.translated);
-	    	graphClass.zoomFactor = d3.event.scale;
-	    	graphClass.translateFactor = d3.event.translate;
-			// function for handling zoom event
-			gnode.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-			path.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-
-
-			svg.selectAll(".hull").attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-
-
-		  	//svg.on("mousedown.zoom", null);
-			//svg.on("mousemove.zoom", null);
-			svg.on("dblclick.zoom", null);
-			//svg.on("touchstart.zoom", null);
-			//svg.on("wheel.zoom", null);
-			//svg.on("mousewheel.zoom", null);
-			//svg.on("MozMousePixelScroll.zoom", null);
-		}
-
-		//function collide(gnode,alpha) {
-		 // var quadtree = d3.geom.quadtree(gnode);
-		  /*return function(d) {
-		    var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
-		        nx1 = d.x - r,
-		        nx2 = d.x + r,
-		        ny1 = d.y - r,
-		        ny2 = d.y + r;
-		    quadtree.visit(function(quad, x1, y1, x2, y2) {
-		      if (quad.point && (quad.point !== d)) {
-		        var x = d.x - quad.point.x,
-		            y = d.y - quad.point.y,
-		            l = Math.sqrt(x * x + y * y),
-		            r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? padding : clusterPadding);
-		        if (l < r) {
-		          l = (l - r) / l * alpha;
-		          d.x -= x *= l;
-		          d.y -= y *= l;
-		          quad.point.x += x;
-		          quad.point.y += y;
-		        }
-		      }
-		      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-		    });
-		  };*/
-		//}
-
-
-		function collide(node) {
-		 // change radius to count
-		 // node.count + 16
-		  var r = node.count + 16,
-		      nx1 = node.x - r,
-		      nx2 = node.x + r,
-		      ny1 = node.y - r,
-		      ny2 = node.y + r;
-		  return function(quad, x1, y1, x2, y2) {
-		    if (quad.point && (quad.point !== node)) {
-		      var x = node.x - quad.point.x,
-		          y = node.y - quad.point.y,
-		          l = Math.sqrt(x * x + y * y),
-		          r = node.radius + quad.point.radius;
-		      if (l < r) {
-		        l = (l - r) / l * .5;
-		        node.x -= x *= l;
-		        node.y -= y *= l;
-		        quad.point.x += x;
-		        quad.point.y += y;
-		      }
+			function dragstart(d, i) {
+		        force.stop() // stops the force auto positioning before you start dragging
 		    }
-		    return x1 > nx2
-		        || x2 < nx1
-		        || y1 > ny2
-		        || y2 < ny1;
-		  };
-		}
 
-		// create the zoom listener
-	    var zoomListener = d3.behavior.zoom()
-	    .scaleExtent([0.1, 4])
-	    .on("zoom", zoomHandler);
+		    function dragmove(d, i) {
+		    	d.px += d3.event.dx;
+		    	d.py += d3.event.dy;
+		    	d.x += d3.event.dx;
+		    	d.y += d3.event.dy; 
+		        tick(); // this is the key to make it work together with updating both px,py,x,y on d !
+		    }
 
-	    zoomListener(svg);
-	    node.on('mouseout', function(d) {
-	    	zoomListener(svg);
-	    });
+		    function dragend(d, i) {
+		        d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
+		        tick();
+		        force.resume();
 
-	    var  allFiles = _.pluck(data.nodes, 'name');
-	    allFiles = allFiles.filter(Boolean);
-//8888888888888
-
-
-
-
-      /*d3.selectAll("#panLeft, #panRight, #panUp, #panDown")
-        .on("click", function () {
-          d3.event.preventDefault();
-          var id = d3.select(this).attr("id");
-          panZoom.pan(id);
-        });*/
-function drawCluster(d) {
-  return curve(d.path); // 0.8
-}
-
-
-
-/*
-var hullg = svg.append("svg:g").selectAll("path.hull");
-
-//hullg.selectAll("path.hull").remove();
-var hull = hullg.selectAll("path.hull")
-      .data(convexHulls(gnode, getGroup, 15))
-    .enter().append("path")
-      .attr("class", "hull")
-      .attr("d", drawCluster)
-      .style("fill", function(d) { return fill(d.group); });
-*/
-
-
-
-
-
-
-//*888888888888888888888888888
-					    
-		$(document).ready(function(){
-/*
-
-			$("#panLeft").on("click", function () {
-				console.log("d3",d3);
-				graphClass.zoomFactor = graphClass.zoomFactor+0.1;				
-				gnode.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
-				path.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");		
-        	});
-
-			$("#zoomIn").on("click", function () {
-				console.log("d3",d3);
-				graphClass.zoomFactor = graphClass.zoomFactor+0.1;				
-				gnode.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
-				path.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");		
-        	});
-
-        	$("#zoomOut").on("click", function () {
-				console.log("d3",d3);
-				graphClass.zoomFactor = graphClass.zoomFactor-0.1;				
-				gnode.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
-				path.transition().duration(100).attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");		
-        	});
-					*/    
-			$("#btn-pause").removeAttr("disabled"); 
-			$("#btn-play").attr("disabled", "disabled");
-
-
-		
-
-            $("#sliderGravity").slider({ max: 1 , min: 0, value: 0.1, step: 0.01, change: function( event, ui ) {
-				force.gravity(ui.value).start();
-				if(graphClass.pause == true){
-					setTimeout(function(){force.stop()},1000);
+		        if(graphClass.pause == true){
+					force.stop();
 				}
-			}});
 
-			$("#sliderFoci").slider({ max: 0.05 , min: 0.00005, value: 0.002, step:0.001, change: function( event, ui ) {
-				graphClass.fociCount = 0;
-				graphClass.foci = ui.value;
-				if(graphClass.pause == true){
-					setTimeout(function(){force.stop()},1000);
-				}
-			}});
+		    }
 
-			$("#sliderCharge").slider({ max: 0 , min: -1000, value: -390, change: function( event, ui ) {
-				force.charge(ui.value).start();
-				if(graphClass.pause == true){
-					setTimeout(function(){force.stop()},1000);
-				}
-			}});
-
-			$("#sliderDistance").slider({ max: 700 , min: 150, value: 270, change: function( event, ui ) {
-				force.linkDistance(ui.value).start();
-				if(graphClass.pause == true){
-					setTimeout(function(){force.stop()},1000);
-				}
-			}});
-
-			$("#sliderFriction").slider({ max: 0.9 , min: 0, value: 0.7, step:0.05, change: function( event, ui ) {
-				force.friction(ui.value).start();
-				if(graphClass.pause == true){
-					setTimeout(function(){force.stop()},1000);
-				}
-			}});
-
-			$("#sliderLiens").slider({ max: 255 , min: 0, value: 128, step:1, change: function( event, ui ) {
-				var val = 255-ui.value;
-				graphClass.pathColor = rgbToHex(val, val, val);
-				path.style('stroke', function(l) {
-					return graphClass.pathColor;
+		    function convexHulls(nodes, index, offset) {
+				var hulls = {};
+				gnode.each(function(n,i){    
+					var i = index(n),
+					l = hulls[i] || (hulls[i] = []);
+					l.push([n.x-offset, n.y-offset]);
+					l.push([n.x-offset, n.y+offset]);
+					l.push([n.x+offset, n.y-offset]);
+					l.push([n.x+offset, n.y+offset]);
 				});
-				
-				
-			}});
+				// create point sets
+				for (var k=0; k<nodes.length; ++k) {
+					var n = nodes[k];
+					if (n.size) continue;
+					var i = index(n),
+					    l = hulls[i] || (hulls[i] = []);
+					l.push([n.x-offset, n.y-offset]);
+					l.push([n.x-offset, n.y+offset]);
+					l.push([n.x+offset, n.y-offset]);
+					l.push([n.x+offset, n.y+offset]);
+				}
+				// create convex hulls
+				var hullset = [];
+				for (i in hulls) {
+				hullset.push({group: i, path: d3.geom.hull(hulls[i])});
+				}
+				return hullset;
+			}
 
+			// Create Legend
+	   		graphClass.createLegend(svg);
 
-			$("#sliderText").slider({ max: 120 , min: 8, value: 11, step:1, change: function( event, ui ) {
-				//d3.select("body").transition().style("font-size", ui.value + "px");
-				text.style("font-size", ui.value + "px");
-				//$('.text').css("font-size", ui.value + "px");
+		    // Create node, text, link
+		    var gnode = svg.selectAll('g.gnode')
+		    .data(data.nodes)
+		    .enter()
+		    .append('g');
 
-			}});
-			
+		    var node = gnode.append("circle")
+		    .attr("class", "node")
+		    .attr("id", function(d){return "circle-node-"+ d.name})
+		    .attr("r", graphClass.graphNodeSize)
+		    .style("fill", graphClass.graphNodeFill)
+		    .call(node_drag);
 
-			
+		    // Events
+		    gnode.selectAll("circle.node").on("dblclick", graphClass.onDoubleClickNode);
 
-			$("#btn-pause").click(function(event,ui){
+		    graphClass.svg = svg;
 
-			console.log("paused");
-			graphClass.pause = true;
-			force.stop();
+		    node.on('mouseover', function(d) {
+		    	graphClass.onMouseOverNode(d,path,node);
+		    	svg.on("mousedown.zoom", null);
+		    	svg.on("mousemove.zoom", null);
+		    	svg.on("touchstart.zoom", null);
 
-			$("#btn-pause").attr("disabled", "disabled");
-			$("#btn-play").removeAttr("disabled");   
-			});
-
-
-			$("#btn-play").click(function(event,ui){
-				graphClass.pause = false;
-				force.start();
-
-				$("#btn-play").attr("disabled", "disabled");
-				$("#btn-pause").removeAttr("disabled"); 
-			});
-
-		    $("#srch-term").autocomplete({
-		        source: allFiles,
-		        d3:d3,
-		        graphClass:graphClass,
-		        svg:svg,
-		        select: function( event, ui){
-		        	graphClass.svg.selectAll("circle.node").each(function(d) {
-		        		if(d.name == ui.item.value){
-		        			console.log(d);
-		        			var currentSize = $(this).attr("r");
-							$(this).effect("pulsate", {}, 900);
-							moveHandler([((graphClass.width/2)-graphClass.zoomFactor*d.x-graphClass.translateFactor[0]),((graphClass.height/2)-graphClass.zoomFactor*d.y-graphClass.translateFactor[1])]);
-		        			
-		        		}
-		        		return d.r;
-		        	});
-		        }
 		    });
 
-		});
+		
+		    // Cursor
+			gnode.style('cursor', function(l) {
+				return 'move';
+			});
+
+
+
+		    gnode.on("mouseout", function(d) {
+	    		path.style("stroke", function(l) {
+				 	return graphClass.pathColor;
+				});
+		        path.style("opacity", function(l) {
+				 	return 1;
+				});
+			});
+
+			path.style('stroke', function(l) {
+				return graphClass.pathColor;
+			});
+
+
+			var tickCount = 0;
+
+			//Graph Tick Handler
+			function tick(e) {
+
+				// Hull Handler
+				var groupsOne = [];
+				var groupsTwo = [];
+				gnode.each(function(n,i){    
+				 if(n.cluster == 2){
+				 	groupsOne.push([n.x,n.y]);
+				 }
+				  if(n.cluster == 3){
+				 	groupsTwo.push([n.x,n.y]);
+				 }
+				});
+
+				var groupPathOne = "M" +d3.geom.hull(groupsOne).join("L") + "Z";
+				var groupPathTwo = "M" +d3.geom.hull(groupsTwo).join("L") + "Z";
+				svg.selectAll(".hull").remove();
+				var hullRed = svg.insert("path", "g")
+				        .style("fill", "#F5A9BC")
+				        .style("stroke", "#F5A9BC")
+				        .style("stroke-width", 40)
+				        .style("stroke-linejoin", "round")
+				        .style("opacity", .2)
+				        .attr("d", groupPathOne)
+				        .attr("class","hull");
+				var hullBlue = svg.insert("path", "g")
+				        .style("fill", "#A9D0F5")
+				        .style("stroke", "#A9D0F5")
+				        .style("stroke-width", 40)
+				        .style("stroke-linejoin", "round")
+				        .style("opacity", .2)
+				        .attr("d", groupPathTwo)
+				        .attr("class","hull");
+
+				hullRed.attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
+				hullBlue.attr("transform", "translate(" + graphClass.translateFactor + ")scale(" + graphClass.zoomFactor + ")");
+
+				// Path position Handler
+				path.attr("d", function(d) {
+				    var dx = d.target.x - d.source.x,
+				        dy = d.target.y - d.source.y,
+				        dr = Math.sqrt(dx * dx + dy * dy),
+				        theta = Math.atan2(dy, dx) + Math.PI / 7.85,
+				        d90 = Math.PI / 2,
+				        dtxs = d.target.x - 20 * Math.cos(theta),
+				        dtys = d.target.y - 20 * Math.sin(theta);
+				    return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0 1," + d.target.x + "," + d.target.y + "A" + dr + "," + dr + " 0 0 0," + d.source.x + "," + d.source.y + "M" + dtxs + "," + dtys +  "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
+				});
+
+				text.attr("dx", function(d) { return d.x+15; })
+				.attr("dy", function(d) { return d.y+1; });
+
+				icon.attr("dx", function(d) { return d.x; })
+				.attr("dy", function(d) { return d.y; });
+
+				// Foci Handler
+				graphClass.fociCount = graphClass.fociCount + 1;	
+				if(graphClass.fociCount < 50){
+					gnode.each(function(o,i){ 
+			    		o.y += (graphClass.fociGroup[o.infoGroup.foci].y - o.y) * graphClass.foci;
+					    o.x += (graphClass.fociGroup[o.infoGroup.foci].x - o.x) * graphClass.foci;
+			    	});
+				}
+
+				//Node Position Handler
+				node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+			}
+
+			function moveHandler(coord){
+				svg.selectAll(".hull").transition().attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
+				gnode.transition().attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
+				path.transition().attr("transform", "translate(" + coord + ")scale(" + graphClass.zoomFactor + ")");
+				graphClass.translateFactor = coord;
+				d3.event.translate = coord;
+				svg.on("dblclick.zoom", null);
+			}
+
+		    function zoomHandler(){
+		    	graphClass.zoomFactor = d3.event.scale;
+		    	graphClass.translateFactor = d3.event.translate;
+				// function for handling zoom event
+				gnode.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+				path.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+				svg.selectAll(".hull").attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+
+				svg.on("dblclick.zoom", null);
+				//svg.on("touchstart.zoom", null);
+			}
+
+			// create the zoom listener
+		    var zoomListener = d3.behavior.zoom()
+		    .scaleExtent([0.05, 10])
+		    .on("zoom", zoomHandler);
+
+
+		    d3.behavior.zoom().scale(0.2);
+		    //zoomHandler();
+
+		    zoomListener(svg);
+		    node.on('mouseout', function(d) {
+		    	zoomListener(svg);
+		    });
+
+		    var  allFiles = _.pluck(data.nodes, 'name');
+		    allFiles = allFiles.filter(Boolean);
+						    
+			$(document).ready(function(){
+	  
+				$("#btn-pause").removeAttr("disabled"); 
+				$("#btn-play").attr("disabled", "disabled");
+
+	            $("#sliderGravity").slider({ max: 0 , min: 2, value: 0.05, change: function( event, ui ) {
+					force.gravity(ui.value).start();
+					if(graphClass.pause == true){
+						setTimeout(function(){force.stop()},1000);
+					}
+				}});
+
+				$("#sliderFoci").slider({ max: 0.05 , min: 0.00005, value: 0.002, step:0.001, change: function( event, ui ) {
+					graphClass.fociCount = 0;
+					graphClass.foci = ui.value;
+					if(graphClass.pause == true){
+						setTimeout(function(){force.stop()},1000);
+					}
+				}});
+
+				$("#sliderCharge").slider({ max: 0 , min: -1000, value: -390, change: function( event, ui ) {
+					force.charge(ui.value).start();
+					if(graphClass.pause == true){
+						setTimeout(function(){force.stop()},1000);
+					}
+				}});
+
+				$("#sliderDistance").slider({ max: 700 , min: 150, value: 270, change: function( event, ui ) {
+					force.linkDistance(ui.value).start();
+					if(graphClass.pause == true){
+						setTimeout(function(){force.stop()},1000);
+					}
+				}});
+
+				$("#sliderFriction").slider({ max: 0.9 , min: 0, value: 0.7, step:0.05, change: function( event, ui ) {
+					force.friction(ui.value).start();
+					if(graphClass.pause == true){
+						setTimeout(function(){force.stop()},1000);
+					}
+				}});
+
+				$("#sliderLiens").slider({ max: 255 , min: 0, value: 128, step:1, change: function( event, ui ) {
+					var val = 255-ui.value;
+					graphClass.pathColor = rgbToHex(val, val, val);
+					path.style('stroke', function(l) {
+						return graphClass.pathColor;
+					});				
+				}});
+
+				$("#sliderText").slider({ max: 120 , min: 8, value: 11, step:1, change: function( event, ui ) {
+					text.style("font-size", ui.value + "px");
+				}});		
+
+				$("#btn-pause").click(function(event,ui){
+					graphClass.pause = true;
+					force.stop();
+					$("#btn-pause").attr("disabled", "disabled");
+					$("#btn-play").removeAttr("disabled");   
+				});
+
+
+				$("#btn-play").click(function(event,ui){
+					graphClass.pause = false;
+					force.start();
+					$("#btn-play").attr("disabled", "disabled");
+					$("#btn-pause").removeAttr("disabled"); 
+				});
+
+			    $("#srch-term").autocomplete({
+			        source: allFiles,
+			        d3:d3,
+			        graphClass:graphClass,
+			        svg:svg,
+			        select: function( event, ui){
+			        	graphClass.svg.selectAll("circle.node").each(function(d) {
+			        		if(d.name == ui.item.value){
+			        			var currentSize = $(this).attr("r");
+								$(this).effect("pulsate", {}, 900);
+								moveHandler([((graphClass.width/2)-graphClass.zoomFactor*d.x-graphClass.translateFactor[0]),((graphClass.height/2)-graphClass.zoomFactor*d.y-graphClass.translateFactor[1])]);        			
+			        		}
+			        		return d.r;
+			        	});
+			        }
+			    });
+
+			}); // ???
 
 		    var text = gnode.append("text")
 		    .attr('font-family', 'sans-serif')
@@ -1207,192 +651,31 @@ var hull = hullg.selectAll("path.hull")
 		    	return d.name;
 		    });
 
-
-
-
-/*
-			var icon = gnode.append('text')
-		    .attr('text-anchor', 'middle')
-		    .attr('dominant-baseline', 'central')
-		    .attr('font-family', 'FontAwesome')
-		  //  .attr('font-weight','bold')
-		   // .style("text-shadow", '1px 1px #fff')
-		    		    //.style("fill-opacity", 0.8)
-
-			.text(function(d) { 
-				var code = "";
-				switch(d.group){
-					case 1:
-						code =  '\uf0f6';
-					break;
-					case 2:
-						code = '\uf1c9';
-					break;
-					case 3:
-						code = '\uf1fc';
-					break;
-					case 5:
-					 	code = '\uf0c1';
-					break;
-					case 6:
-						code = '\uf13d';
-					break;
-					case 10:
-					case 12:
-						code = '\uf127';
-					break
-					case 15:
-						code = '\uf08e';
-					break;
-				}
-				return code;
-
-			}); */
-
 			var icon = gnode.append('text')
 		    .attr('text-anchor', 'middle')
 		    .attr('dominant-baseline', 'central')
 		    .attr('font-family', 'Oswald')
 		    .attr('font-weight', '7px')
 		    .style('fill', '#ffffff')
-		    //.attr('font-weight','bold')
-		   // .style("text-shadow", '1px 1px #fff')
-		    		    //.style("fill-opacity", 0.8)
-
 			.text(function(d) { 
 				var code = "";
-				switch(d.group){
-					case 1:
-						code =  'HTML';
-					break;
-					case 2:
-						code = 'JS';
-					break;
-					case 3:
-						code = 'CSS';
-					break;
-					case 5:
-					 	code = 'LINK';
-					break;
-					case 6:
-						code = '#';
-					break;
-					case 7:
-						code = '@';
-					break;
-					case 8:
-						code = 'CSS';
-					break;
-					case 10:
-					case 11:
-						code = 'JS';
-					break
-					case 12:
-					case 13:
-						code = 'CSS';
-					break
-					case 14:
-						code = 'PHP';
-					break
-					/*case 15:
-						code = '\uf08e';
-					break;*/
-				}
 				return d.infoGroup.text;
-
 			}); 
 
+			force.on("tick", tick);
+		}
+	};
 
-	var topLeft = {x: 150, y: 150};
-
-	var topRight = {x: 150, y: 850};
-	var bottomLeft = {x: 850, y: 150};
-	var bottomRight = {x: 850, y: 850};
-
-
-	var foci = {	topLeft:{x: 150, y: 150},
-				 	topCenter:{x: 150, y: 425},
-				 	topRight: {x: 150, y: 850},
-				 	centerLeft: {x: 425, y: 150},
-				 	center: {x: 425, y: 425},
-				 	centerRight: {x: 425, y: 850},
-				 	bottomLeft: {x: 850, y: 150},
-				 	bottomCenter: {x: 850, y: 425},
-				 	bottomRight: {x: 850, y: 850}
-				};
-
-
-
-/*
-    var foci = [topLeft,topLeft, topRight, bottomLeft, topRight, bottomRight,
-    			bottomRight,bottomRight,bottomLeft,bottomRight,topRight,
-    			topRight,bottomLeft,bottomLeft,bottomRight,bottomRight,
-    			bottomRight,bottomRight,bottomRight,bottomRight];
-*/
-
-
-/*	
-	1: html
-	2: javascript externe
-	3: css externe
-	4: javascript interne
-	5: liens externe
-	6: ancres HTML (#Pages)
-	7: liens courriel
-	8: css interne
-	9: requête ajax
-	10: javascript externe (mort)
-	11: javascript externe (lien)
-	12: css externe (mort)
-	13: css externe (lien)
-	14: PHP
-	15: Autre
-	16: Template
-	*/
-
-
-
-
-/*
-			var icon = gnode.append("image")
-    .attr("xlink:href", "https://github.com/favicon.ico")
-    .attr("x", -28)
-    .attr("y", -8)
-    .attr("width", 16)
-    .attr("height", 16);*/
-
-		
-
-		    force.on("tick", tick);
-	}
-};
-
-
-
-graphClass.generateGraph();
-
-
-
-
-
-
-
-
-
+	graphClass.generateGraph();
 
 	var sorting = function(a, b) {
 		var x = (a.isFolder() ? "0" : "1") + a.title.toLowerCase(), y = (b.isFolder() ? "0" : "1") + b.title.toLowerCase(); 
 		return x === y ? 0 : x > y ? 1 : -1; 
 	};
 
-
-
-
-
-
 	$('button[rel="popover"]').tooltip({
-        placement : 'bottom'
-    });
+	    placement : 'bottom'
+	});
 
 	//Arbre
 	var node = $("#tree").fancytree({
@@ -1415,76 +698,28 @@ graphClass.generateGraph();
 		return false;
 	});
 
-
-
-
-
 	$("#checkboxLiensDetails").change(function () {
 	    graphClass.liensDetails = $(this).is(":checked"); 
 	});
 
-
-
 	$("#download-svg").on("click", function(){
-                    var serializer = new XMLSerializer();
-                    var xmlString = serializer.serializeToString(d3.select('svg').node());
-                    var imgData = 'data:image/svg+xml;base64,' + btoa(xmlString);
-                    
-
-                    $("#download-svg").attr("href",imgData);
-                        
-});
-
-
-
-/*
-	 $("#download-svg").attr("href", "data:image/svg+xml;charset=utf-8;base64," + btoa(unescape(encodeURIComponent(
-		d3.selectAll("svg").attr("version", "1.1").attr("xmlns", "http://www.w3.org/2000/svg")
-		.node().parentNode.innerHTML)
-		)
-		)
-		)
-		.attr("download",filename);*/
-
-/*
-	$("#tree").fancytree({
-		//checkbox: true,
-		//graphClass: graphClass,
-		selectMode: 3,
-		select: function(event, data) {
-			
-/*
-				// We should not toggle, if target was "checkbox", because this
-				// would result in double-toggle (i.e. no toggle)
-				if( $.ui.fancytree.getEventTargetType(event) === "title" ){
-					data.node.toggleSelected();
-				}
-				
-
-				//each title
-
-				async.map(data.tree.getSelectedNodes(), function(currentNode,callback){
-					//console.log(currentNode);
-					callback(null,currentNode.data.path);
-				}, function(err, results){
-				    // results is now an array of stats for each file
-
-				 
-
-				    graphClass.regenGraph(results);
-
-				});
-*/
-	//	}
-
-	//});
+	                var serializer = new XMLSerializer();
+	                var xmlString = serializer.serializeToString(d3.select('svg').node());
+	                var imgData = 'data:image/svg+xml;base64,' + btoa(xmlString);             
+	                $("#download-svg").attr("href",imgData);
+	                    
+	});
 
 	
-	
 
 
 
-});
+	$("#testfilter").click(function() {
+		graphClass.filter();
+	});
+
+
+});  //???
 
 function componentToHex(c) {
     var hex = c.toString(16);
@@ -1494,7 +729,3 @@ function componentToHex(c) {
 function rgbToHex(r, g, b) {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
-
-
-
-
