@@ -1,0 +1,18 @@
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO ## Priority start:10
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO Current Parser running CSS
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO Current Parser running Forms
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO Current Parser running HTML
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO Current Parser running JavaScript
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO Current Parser running JavaScript Array
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO Current Parser running JavaScript Object
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO "@@ Plugin executing undefined
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO No nodes to parse for  CSS
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO "@@ Plugin executing undefined
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO No nodes to parse for  Forms
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO "@@ Plugin executing undefined
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO No nodes to parse for  HTML
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO "@@ Plugin executing undefined
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO "@@ Plugin executing undefined
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO "@@ Plugin executing undefined
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO ## Priority done:10
+[Tue Jan 27 2015 17:05:16 GMT-0500 (Est)] INFO ## All Plugin executed

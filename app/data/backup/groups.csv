@@ -1,0 +1,33 @@
+"keyword","label","color","text","count"
+"html","Html","#FF0000","HTML",900
+"html-element","Html elements","#00CCFF","H-ELE",767
+"form","Form","#880000","FORM",1
+"form-element","Form elements","#996600","F-ELE",19
+"js","JavaScripts","#0000FF","JS",38
+"js-markup","JavaScripts Markup","#D9D9FF","JS",1263
+"js-unreachable","Unreachable JavaScripts","#6699FF","JS",58
+"js-object","JavaScripts objects","#B041FF","JS-OBJ",30
+"js-array","JavaScripts arrays","#800080","JS-ARR",44
+"js-function","JavaScripts functions","#C45AEC","JS-FUNC",481
+"js-method","JavaScripts methods","#E6A9EC","JS-MET",28
+"js-variable","JavaScripts variable","#C38EC7","JS-VAR",150
+"js-call","JavaScripts call","#CC99FF","JS-CALL",0
+"backbone-element","Backbone elements","#E6C4FF","BBONE",0
+"angular-js-element","Angular javascript elements","#AECFC6","ANG",0
+"angular-html-element","Angular html elements","#AECFC6","ANG",0
+"css","Css","#009900","CSS",16
+"css-markup","Css Markups","#00AA00","CSS",0
+"css-unreachable","Unreachable Css","#00BB00","CSS",0
+"link","External Links","#6699FF","LINK",14770
+"anchor","Anchor(#)","#D462FF","#",0
+"email","Email","#009933","@",0
+"ajax","AJAX Requests","#0000FF","AJAX",0
+"ws","Web Services","#CC3366","WS",0
+"php","PHP","#F2BFFF","PHP",0
+"java-package","JAVA packages","#FFAA00","JPCK",1
+"java-class","JAVA classes","#FFCC00","JAVA",9
+"java-field","JAVA fields","#F87217","FIELD",0
+"java-method","JAVA methods","#C85A17","METH",0
+"jsp","JAVA server page","#C48CDB","JSP",0
+"tpl","Templates","#0000FF","TPL",0
+"unknown","Unknown","#CCEBF5","?",0

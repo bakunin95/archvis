@@ -1,0 +1,204 @@
+[
+    {
+        "name": "CoreHtml",
+        "active": true,
+        "filter": {
+            "group": {
+                "$in": [
+                    "html",
+                    "jsp",
+                    "php"
+                ]
+            }
+        },
+        "priority": 10
+    },
+    {
+        "name": "CoreJava",
+        "active": true,
+        "filter": {
+            "group": "java"
+        },
+        "priority": 10
+    },
+    {
+        "name": "coreJS",
+        "active": true,
+        "filter": {
+            "group": {
+                "$in": [
+                    "js"
+                ]
+            }
+        },
+        "priority": 10
+    },
+    {
+        "name": "JavaDependency",
+        "active": true,
+        "filter": {
+            "group": "java-class"
+        },
+        "priority": 15
+    },
+    {
+        "name": "jsAMD",
+        "active": true,
+        "filter": {
+            "group": {
+                "$in": [
+                    "js",
+                    "js-markup"
+                ]
+            }
+        },
+        "priority": 15
+    },
+    {
+        "name": "jsRequire",
+        "active": true,
+        "filter": {
+            "group": {
+                "$in": [
+                    "js",
+                    "js-markup"
+                ]
+            }
+        },
+        "priority": 15
+    },
+    {
+        "name": "JavaPackage",
+        "active": true,
+        "filter": {
+            "group": "java-class"
+        },
+        "priority": 20
+    },
+    {
+        "name": "Node",
+        "active": true,
+        "filter": {
+            "group": "js",
+            "exist": true
+        },
+        "priority": 20
+    },
+    {
+        "name": "JavaClass",
+        "active": true,
+        "filter": {
+            "group": "java-class"
+        },
+        "priority": 25
+    },
+    {
+        "name": "jsAjax",
+        "active": true,
+        "filter": {
+            "group": {
+                "$in": [
+                    "js",
+                    "js-markup"
+                ]
+            }
+        },
+        "priority": 30
+    },
+    {
+        "name": "coreCSS",
+        "active": true,
+        "filter": {
+            "group": "css"
+        },
+        "priority": 50
+    },
+    {
+        "name": "Form",
+        "active": true,
+        "filter": {
+            "group": {
+                "$in": [
+                    "html",
+                    "jsp",
+                    "php"
+                ]
+            }
+        },
+        "priority": 60
+    },
+    {
+        "name": "htmlElement",
+        "active": true,
+        "filter": {
+            "group": {
+                "$in": [
+                    "html",
+                    "jsp",
+                    "php"
+                ]
+            }
+        },
+        "priority": 80
+    },
+    {
+        "name": "JavaElement",
+        "active": true,
+        "filter": {
+            "group": {
+                "$in": [
+                    "java-field",
+                    "java-method"
+                ]
+            }
+        },
+        "priority": 100
+    },
+    {
+        "name": "Angular",
+        "active": true,
+        "filter": {
+            "group": {
+                "$in": [
+                    "html",
+                    "jsp",
+                    "php"
+                ]
+            }
+        },
+        "priority": 110
+    },
+    {
+        "name": "Backbone",
+        "active": true,
+        "filter": {
+            "group": {
+                "$in": [
+                    "js",
+                    "js-markup"
+                ]
+            }
+        },
+        "priority": 110
+    },
+    {
+        "name": "FormElement",
+        "active": true,
+        "filter": {
+            "group": "form"
+        },
+        "priority": 200
+    },
+    {
+        "name": "Hull",
+        "active": true,
+        "filter": {},
+        "priority": 200
+    },
+    {
+        "name": "groupCount",
+        "active": true,
+        "filter": {},
+        "priority": 999999999
+    }
+]
