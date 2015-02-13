@@ -1,0 +1,1 @@
+node archvis website/domtest ../resultat/Test & mocha test/domtest.js -R spec > domtest.log & domtest.log

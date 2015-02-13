@@ -1,0 +1,79 @@
+
+
+  ALL
+    √ Graph exist 
+    √ Node exist 
+    √ Link exist 
+    √ Group exist 
+    √ Nodes all have essential property 
+    √ Links all have essential property 
+    √ Links source does not equal target 
+
+  DOMTEST
+    files exist
+      √ files exist: website/domtest/forms.html (292ms)
+      √ files exist: website/domtest/angular.html (243ms)
+      √ files exist: website/domtest/markup.html (291ms)
+      √ files exist: website/domtest/link.html (342ms)
+      √ files exist: website/domtest/htmfile.htm (286ms)
+      √ files exist: website/domtest/jspfile.jsp (313ms)
+      √ files exist: website/domtest/phpfile.php (301ms)
+    forms
+      √ form element: website/domtest/forms.html::form1 (174ms)
+      √ form element: website/domtest/forms.html::form1::firstname (198ms)
+      √ form element: website/domtest/forms.html::form1::lastname (234ms)
+      √ form element: website/domtest/forms.html::form1::send (175ms)
+      √ form element: website/domtest/forms.html (292ms)
+      √ form element: website/domtest/forms.html::form>1 (238ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1 (276ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::legend>1 (179ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>1 (184ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::textarea>1 (247ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::label>1 (169ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>2 (178ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>2::optgroup>1 (96ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>2::optgroup>2 (91ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::browser (308ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::browsers (153ms)
+      √ form element: website/domtest/forms.html::form>2::security (183ms)
+      √ form element: website/domtest/forms.html::form>3 (147ms)
+      √ form element: website/domtest/forms.html::form>3::x (190ms)
+      √ form element: website/domtest/forms.html::button>1 (239ms)
+    link
+      √ a element: http://www.w3schools.com (130ms)
+      √ script element: website/domtest/myscripts.js 
+      √ frame element: website/domtest/frame_a.html (132ms)
+      √ frame element: website/domtest/frame_b.html 
+      √ frame element: website/domtest/frame_c.html (83ms)
+      √ iframe element: http://www.outsidelink.com (268ms)
+      √ video element: website/domtest/link.html::video>1 (112ms)
+      √ audio element: website/domtest/link.html::audio>1 
+      √ applet element: Bubbles.class (41ms)
+      √ anchor element: #anchorTest 
+    markup
+      √ script markup: website/domtest/markup.html::script>1 (266ms)
+      √ script markup: website/domtest/markup.html::script>1::ObjectA (64ms)
+      √ script markup: website/domtest/markup.html::script>2 (265ms)
+      √ script markup: website/domtest/markup.html::script>2::varA (59ms)
+      √ css markup: website/domtest/markup.html::style>1 (302ms)
+      1) css markup: website/domtest/markup.html::style>1::.test
+
+
+  49 passing (8s)
+  1 failing
+
+  1) DOMTEST markup css markup: website/domtest/markup.html::style>1::.test:
+     AssertionError: expected an element of [ Array(66) ] to have a property 'name' of 'website/domtest/markup.html::style>1::.test', but got 'website/domtest/markup.html'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\domtest.js:144:80)
+      at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
+      at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
+      at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:452:12
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
+      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:354:15)
+
+
+

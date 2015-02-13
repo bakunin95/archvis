@@ -1,0 +1,202 @@
+
+
+  ALL
+    √ Graph exist 
+    √ Node exist 
+    √ Link exist 
+    √ Group exist 
+    √ Nodes all have essential property 
+    √ Links all have essential property 
+
+  JSTEST
+    Js files exist
+      √ Js files exist: website/jstest/array.js (343ms)
+      √ Js files exist: website/jstest/class.js (329ms)
+      √ Js files exist: website/jstest/function.js (281ms)
+      √ Js files exist: website/jstest/object.js (297ms)
+      √ Js files exist: website/jstest/function.js (328ms)
+      √ Js files exist: website/jstest/jquery.js (391ms)
+    array.js element
+      √ Array exist: website/jstest/array.js::arrayA (156ms)
+      √ Array exist: website/jstest/array.js::arrayB (188ms)
+      √ Array exist: website/jstest/array.js::arrayC 
+      √ Array exist: website/jstest/array.js::arrayD (140ms)
+      √ Array exist: website/jstest/array.js::arrayE 
+    function.js element
+      √ Function exist: website/jstest/function.js::funcA() (375ms)
+      √ Function exist: website/jstest/function.js::funcB() (313ms)
+      √ Function exist: website/jstest/function.js::funcC() (375ms)
+      √ Function exist: website/jstest/function.js::funcD() (313ms)
+      1) Function exist: website/jstest/function.js::funcD()::funcE()
+    variables.js element
+      √ Variable exist: website/jstest/variables.js::stringA (109ms)
+      √ Variable exist: website/jstest/variables.js::stringB (156ms)
+      √ Variable exist: website/jstest/variables.js::stringC (47ms)
+    object.js element
+      √ Object exist: website/jstest/object.js::objectA (47ms)
+      √ Object exist: website/jstest/object.js::objectB (156ms)
+      √ Object exist: website/jstest/object.js::objectC (94ms)
+      √ Object exist: website/jstest/object.js::objectD (125ms)
+      √ Object exist: website/jstest/object.js::objectE (312ms)
+      √ Object exist: website/jstest/object.js::objectF (282ms)
+      √ Object exist: website/jstest/object.js::objectG (47ms)
+      √ Object exist: website/jstest/object.js::objectH (218ms)
+      √ Object exist: website/jstest/object.js::person (297ms)
+      2) Object exist: website/jstest/object.js::objectC::methodA()
+      3) Object exist: website/jstest/object.js::objectB::methodB()
+      4) Object exist: website/jstest/object.js::objectD::methodC()
+      5) Object exist: website/jstest/object.js::person::getName()
+    class.js element
+      √ Function exist: website/jstest/class.js::Apple() (203ms)
+      √ Function exist: website/jstest/class.js::getAppleInfo() (312ms)
+      √ Function exist: website/jstest/class.js::Apple2() (172ms)
+      √ Function exist: website/jstest/class.js::Apple3() 
+      6) Function exist: website/jstest/class.js::Apple4
+      7) Function exist: website/jstest/class.js::Apple5()
+    jquery.js element
+      √ Function ajax: website/jstest/jquery.js::url (282ms)
+      √ Function ajax: website/jstest/jquery.js::url2 (172ms)
+      √ Function get: website/jstest/ajax/test.html (203ms)
+      8) Function get: website/jstest/ajax/test2.html
+      √ Function var get: website/jstest/example.php (188ms)
+      √ Function var get: website/jstest/example2.php (125ms)
+      9) Function post: website/jstest/demo_test_post.asp
+      10) Function post: website/jstest/demo_test_post2.asp
+      √ Function load: website/jstest/demo_test.txt (234ms)
+
+
+  43 passing (11s)
+  10 failing
+
+  1) JSTEST function.js element Function exist: website/jstest/function.js::funcD()::funcE():
+     AssertionError: expected an element of [ Array(72) ] to have a property 'name' of 'website/jstest/function.js::funcD()::funcE()', but got 'website/jstest/object.js'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\jstest.js:158:80)
+      at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
+      at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
+      at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:452:12
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
+      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:354:15)
+
+  2) JSTEST object.js element Object exist: website/jstest/object.js::objectC::methodA():
+     AssertionError: expected an element of [ Array(72) ] to have a property 'name' of 'website/jstest/object.js::objectC::methodA()', but got 'website/jstest/object.js'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\jstest.js:158:80)
+      at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
+      at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
+      at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:452:12
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
+      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:354:15)
+
+  3) JSTEST object.js element Object exist: website/jstest/object.js::objectB::methodB():
+     AssertionError: expected an element of [ Array(72) ] to have a property 'name' of 'website/jstest/object.js::objectB::methodB()', but got 'website/jstest/object.js'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\jstest.js:158:80)
+      at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
+      at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
+      at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:452:12
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
+      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:354:15)
+
+  4) JSTEST object.js element Object exist: website/jstest/object.js::objectD::methodC():
+     AssertionError: expected an element of [ Array(72) ] to have a property 'name' of 'website/jstest/object.js::objectD::methodC()', but got 'website/jstest/object.js'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\jstest.js:158:80)
+      at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
+      at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
+      at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:452:12
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
+      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:354:15)
+
+  5) JSTEST object.js element Object exist: website/jstest/object.js::person::getName():
+     AssertionError: expected an element of [ Array(72) ] to have a property 'name' of 'website/jstest/object.js::person::getName()', but got 'website/jstest/object.js'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\jstest.js:158:80)
+      at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
+      at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
+      at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:452:12
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
+      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:354:15)
+
+  6) JSTEST class.js element Function exist: website/jstest/class.js::Apple4:
+     AssertionError: expected an element of [ Array(72) ] to have a property 'name' of 'website/jstest/class.js::Apple4', but got 'website/jstest/object.js'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\jstest.js:158:80)
+      at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
+      at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
+      at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:452:12
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
+      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:354:15)
+
+  7) JSTEST class.js element Function exist: website/jstest/class.js::Apple5():
+     AssertionError: expected an element of [ Array(72) ] to have a property 'name' of 'website/jstest/class.js::Apple5()', but got 'website/jstest/object.js'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\jstest.js:158:80)
+      at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
+      at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
+      at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:452:12
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
+      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:354:15)
+
+  8) JSTEST jquery.js element Function get: website/jstest/ajax/test2.html:
+     AssertionError: expected an element of [ Array(72) ] to have a property 'name' of 'website/jstest/ajax/test2.html', but got 'website/jstest/object.js'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\jstest.js:158:80)
+      at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
+      at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
+      at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:452:12
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
+      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:354:15)
+
+  9) JSTEST jquery.js element Function post: website/jstest/demo_test_post.asp:
+     AssertionError: expected an element of [ Array(72) ] to have a property 'name' of 'website/jstest/demo_test_post.asp', but got 'website/jstest/object.js'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\jstest.js:158:80)
+      at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
+      at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
+      at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:452:12
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
+      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:354:15)
+
+  10) JSTEST jquery.js element Function post: website/jstest/demo_test_post2.asp:
+     AssertionError: expected an element of [ Array(72) ] to have a property 'name' of 'website/jstest/demo_test_post2.asp', but got 'website/jstest/object.js'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\jstest.js:158:80)
+      at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
+      at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
+      at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:452:12
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
+      at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
+      at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
+      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:354:15)
+
+
+

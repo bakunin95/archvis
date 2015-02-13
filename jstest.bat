@@ -1,0 +1,1 @@
+node archvis website/jstest ../resultat/Test & mocha test/jstest.js -R spec > jstest.log & jstest.log
