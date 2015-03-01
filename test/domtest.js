@@ -37,16 +37,20 @@ describe('ALL', function() {
 	});
 
 	it('Nodes all have essential property', function() {
-		data.nodes.should.all.have.property('_id');
 		data.nodes.should.all.have.property('id');
 		data.nodes.should.all.have.property('group');	
 		data.nodes.should.all.have.property('name');
 		data.nodes.should.all.have.property('time');
+		data.nodes.should.all.have.property('file');
+		data.nodes.should.all.have.property('folder');
+		data.nodes.should.all.have.property('groupColor');
+		data.nodes.should.all.have.property('groupText');
+		data.nodes.should.all.have.property('groupFoci');
 
 	});
 
 	it('Links all have essential property', function() {
-		data.links.should.all.have.property('_id');
+		data.links.should.all.have.property('id');
 		data.links.should.all.have.property('source');
 		data.links.should.all.have.property('target');	
 	});
@@ -119,7 +123,7 @@ describe('DOMTEST', function() {
 		nodeTest('video element','website/domtest/link.html::video>1');
 		nodeTest('audio element','website/domtest/link.html::audio>1');	
 		nodeTest('applet element','Bubbles.class');	
-		nodeTest('anchor element','#anchorTest');	
+		nodeTest('anchor element','website/domtest/link.html::#anchorTest');	
 	});
 
 

@@ -299,7 +299,7 @@ jQuery(function($) {
 	    	}
 		},
 		graphNodeFill: function(d) { 
-		    return d.infoGroup.color; 
+		    return d.groupColor; 
 		},
 		drawGraph: function(data){
 
@@ -509,8 +509,8 @@ jQuery(function($) {
 				graphClass.fociCount = graphClass.fociCount + 1;	
 				if(graphClass.fociCount < 50){
 					gnode.each(function(o,i){ 
-			    		o.y += (graphClass.fociGroup[o.infoGroup.foci].y - o.y) * graphClass.foci;
-					    o.x += (graphClass.fociGroup[o.infoGroup.foci].x - o.x) * graphClass.foci;
+			    		o.y += (graphClass.fociGroup[o.groupFoci].y - o.y) * graphClass.foci;
+					    o.x += (graphClass.fociGroup[o.groupFoci].x - o.x) * graphClass.foci;
 			    	});
 				}
 
@@ -659,7 +659,7 @@ jQuery(function($) {
 		    .style('fill', '#ffffff')
 			.text(function(d) { 
 				var code = "";
-				return d.infoGroup.text;
+				return d.groupText;
 			}); 
 
 			force.on("tick", tick);

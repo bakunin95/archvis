@@ -11,60 +11,60 @@
 
   DOMTEST
     files exist
-      √ files exist: website/domtest/forms.html (292ms)
-      √ files exist: website/domtest/angular.html (243ms)
-      √ files exist: website/domtest/markup.html (291ms)
-      √ files exist: website/domtest/link.html (342ms)
-      √ files exist: website/domtest/htmfile.htm (286ms)
-      √ files exist: website/domtest/jspfile.jsp (313ms)
-      √ files exist: website/domtest/phpfile.php (301ms)
+      √ files exist: website/domtest/forms.html 
+      √ files exist: website/domtest/angular.html 
+      √ files exist: website/domtest/markup.html (40ms)
+      √ files exist: website/domtest/link.html 
+      √ files exist: website/domtest/htmfile.htm 
+      √ files exist: website/domtest/jspfile.jsp (40ms)
+      √ files exist: website/domtest/phpfile.php 
     forms
-      √ form element: website/domtest/forms.html::form1 (174ms)
-      √ form element: website/domtest/forms.html::form1::firstname (198ms)
-      √ form element: website/domtest/forms.html::form1::lastname (234ms)
-      √ form element: website/domtest/forms.html::form1::send (175ms)
-      √ form element: website/domtest/forms.html (292ms)
-      √ form element: website/domtest/forms.html::form>1 (238ms)
-      √ form element: website/domtest/forms.html::form>1::fieldset>1 (276ms)
-      √ form element: website/domtest/forms.html::form>1::fieldset>1::legend>1 (179ms)
-      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>1 (184ms)
-      √ form element: website/domtest/forms.html::form>1::fieldset>1::textarea>1 (247ms)
-      √ form element: website/domtest/forms.html::form>1::fieldset>1::label>1 (169ms)
-      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>2 (178ms)
-      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>2::optgroup>1 (96ms)
-      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>2::optgroup>2 (91ms)
-      √ form element: website/domtest/forms.html::form>1::fieldset>1::browser (308ms)
-      √ form element: website/domtest/forms.html::form>1::fieldset>1::browsers (153ms)
-      √ form element: website/domtest/forms.html::form>2::security (183ms)
-      √ form element: website/domtest/forms.html::form>3 (147ms)
-      √ form element: website/domtest/forms.html::form>3::x (190ms)
-      √ form element: website/domtest/forms.html::button>1 (239ms)
+      √ form element: website/domtest/forms.html::form1 (55ms)
+      √ form element: website/domtest/forms.html::form1::firstname (75ms)
+      √ form element: website/domtest/forms.html::form1::lastname (120ms)
+      √ form element: website/domtest/forms.html::form1::send (95ms)
+      √ form element: website/domtest/forms.html 
+      √ form element: website/domtest/forms.html::form>1 (55ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1 (105ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::legend>1 (205ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>1 (225ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::textarea>1 (235ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::label>1 (225ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>2 (195ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>2::optgroup>1 (250ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::select>2::optgroup>2 (330ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::browser (185ms)
+      √ form element: website/domtest/forms.html::form>1::fieldset>1::browsers (205ms)
+      √ form element: website/domtest/forms.html::form>2::security (115ms)
+      √ form element: website/domtest/forms.html::form>3 (85ms)
+      √ form element: website/domtest/forms.html::form>3::x (170ms)
+      √ form element: website/domtest/forms.html::button>1 (85ms)
     link
-      √ a element: http://www.w3schools.com (130ms)
-      √ script element: website/domtest/myscripts.js 
-      √ frame element: website/domtest/frame_a.html (132ms)
-      √ frame element: website/domtest/frame_b.html 
-      √ frame element: website/domtest/frame_c.html (83ms)
-      √ iframe element: http://www.outsidelink.com (268ms)
-      √ video element: website/domtest/link.html::video>1 (112ms)
-      √ audio element: website/domtest/link.html::audio>1 
-      √ applet element: Bubbles.class (41ms)
-      √ anchor element: #anchorTest 
+      √ a element: http://www.w3schools.com (415ms)
+      √ script element: website/domtest/myscripts.js (450ms)
+      √ frame element: website/domtest/frame_a.html (420ms)
+      √ frame element: website/domtest/frame_b.html (396ms)
+      √ frame element: website/domtest/frame_c.html (370ms)
+      √ iframe element: http://www.outsidelink.com (420ms)
+      √ video element: website/domtest/link.html::video>1 (425ms)
+      √ audio element: website/domtest/link.html::audio>1 (430ms)
+      √ applet element: Bubbles.class (435ms)
+      √ anchor element: website/domtest/link.html::#anchorTest (440ms)
     markup
-      √ script markup: website/domtest/markup.html::script>1 (266ms)
-      √ script markup: website/domtest/markup.html::script>1::ObjectA (64ms)
-      √ script markup: website/domtest/markup.html::script>2 (265ms)
-      √ script markup: website/domtest/markup.html::script>2::varA (59ms)
-      √ css markup: website/domtest/markup.html::style>1 (302ms)
+      √ script markup: website/domtest/markup.html::script>1 (471ms)
+      √ script markup: website/domtest/markup.html::script>1::ObjectA (485ms)
+      √ script markup: website/domtest/markup.html::script>2 (465ms)
+      √ script markup: website/domtest/markup.html::script>2::varA (505ms)
+      √ css markup: website/domtest/markup.html::style>1 (455ms)
       1) css markup: website/domtest/markup.html::style>1::.test
 
 
-  49 passing (8s)
+  49 passing (10s)
   1 failing
 
   1) DOMTEST markup css markup: website/domtest/markup.html::style>1::.test:
-     AssertionError: expected an element of [ Array(66) ] to have a property 'name' of 'website/domtest/markup.html::style>1::.test', but got 'website/domtest/markup.html'
-      at Context.<anonymous> (D:\MAITRISE\archvis\test\domtest.js:144:80)
+     AssertionError: expected an element of [ Array(66) ] to have a property 'name' of 'website/domtest/markup.html::style>1::.test', but got 'website/domtest/markup.html::style>1[.test]'
+      at Context.<anonymous> (D:\MAITRISE\archvis\test\domtest.js:148:80)
       at callFn (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:251:21)
       at Test.Runnable.run (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runnable.js:244:7)
       at Runner.runTest (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:374:10)
@@ -72,8 +72,8 @@
       at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:299:14)
       at C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:309:7
       at next (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:248:23)
-      at Object._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
-      at processImmediate [as _immediateCallback] (timers.js:354:15)
+      at Immediate._onImmediate (C:\Users\jo\AppData\Roaming\npm\node_modules\mocha\lib\runner.js:276:5)
+      at processImmediate [as _immediateCallback] (timers.js:358:17)
 
 
 
